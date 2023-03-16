@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     
     //Declare variables
     fstream txtFile,binFile;
-    int nMovies,record;
+    int nMovies,record,input;
     CMovie *moviesDB=nullptr;
     
     //Initialize variables
@@ -37,16 +37,17 @@ int main(int argc, char** argv) {
     //Open the text and binary files
     txtFile.open("moviesDB.txt",ios::out);
     binFile.open("moviesDB.bin",ios::in|ios::out|ios::binary|ios::trunc);
-       
+    
     //Write to text and binary files
     moviesDB->wrtTxt(txtFile);
     moviesDB->display();
     moviesDB->wrtBin(binFile);
     
-    //Read back in the structure and print out
-    record=rand()%100;
-    cout<<endl<<"Random Record to Find = "<<record<<endl;
-    moviesDB->readBin(binFile,record);
+    //Read back in the structure and print out record
+    cout<<"Enter a Record to Find (0-100): ";
+    cin>>input;
+    cout<<"Record "<<input<<" = "<<endl;
+    moviesDB->readBin(binFile,input);
 
     //Close the files
     txtFile.close();

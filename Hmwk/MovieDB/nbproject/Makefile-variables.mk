@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-MacOSX
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-MacOSX
-CND_ARTIFACT_NAME_Debug=13class_1
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/13class_1
+CND_ARTIFACT_NAME_Debug=moviedb
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/moviedb
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-MacOSX/package
-CND_PACKAGE_NAME_Debug=13class1.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/13class1.tar
+CND_PACKAGE_NAME_Debug=moviedb.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/moviedb.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-MacOSX
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-MacOSX
-CND_ARTIFACT_NAME_Release=13class_1
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/13class_1
+CND_ARTIFACT_NAME_Release=moviedb
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/moviedb
 CND_PACKAGE_DIR_Release=dist/Release/GNU-MacOSX/package
-CND_PACKAGE_NAME_Release=13class1.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/13class1.tar
+CND_PACKAGE_NAME_Release=moviedb.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/moviedb.tar
 #
 # include compiler specific variables
 #
