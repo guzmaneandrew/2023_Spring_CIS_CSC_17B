@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Display/Visibility</title>
+  <style>
+    h1 {
+    /* takes up same space as before */
+      visibility: hidden;
+    }
+
+    .hidden {
+      /* does not take up any space */
+      display: none;
+      color: red;
+    }
+
+    li {
+      display: inline;
+    }
+
+    strong {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>This is a heading</h1>
+  <p class="hidden">This is a paragraph</p>
+  <p>This is a <strong>paragraph</strong></p>
+  <ul>
+    <li>Apple</li>
+    <li>Orange</li>
+    <li>Pear</li>
+  </ul>
+</body>
+</html>
