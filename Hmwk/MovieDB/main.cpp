@@ -44,10 +44,10 @@ int main(int argc, char** argv) {
     moviesDB->wrtBin(binFile);
     
     //Read back in the structure and print out record
-    cout<<"Enter a Record to Find (0-100): ";
+    cout<<"Enter a Record to Find (1-100): ";
     cin>>input;
     cout<<"Record "<<input<<" = "<<endl;
-    moviesDB->readBin(binFile,input);
+    moviesDB->readBin(binFile,input-1);
 
     //Close the files
     txtFile.close();

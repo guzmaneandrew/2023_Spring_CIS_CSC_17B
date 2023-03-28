@@ -23,14 +23,12 @@ CMovie::CMovie() {
     for(int mv=0;mv<movies->nMovies;mv++) {    //Fill each of the MovieInfo structures
         movies->mvInfo[mv].mvName="Movie #"+to_string(mv+1);
         
-        string dName="The Daniels"+to_string(mv+1);
+        string dName="The Daniels "+to_string(mv+1);
         const char *dirN=dName.c_str();           //string to c-string
         int nameSiz=strlen(dirN);                //need size to create char array dynamically
         movies->mvInfo[mv].dirName=new char[nameSiz];   //Dynamic char array allocated
         strcpy(movies->mvInfo[mv].dirName,dirN);
-        
-//        if(dirN[size]=='\0') cout<<"NULL"<<endl;
-        
+                
         movies->mvInfo[mv].runTime=120+(rand()%75);
         movies->mvInfo[mv].yearRel=1950+(rand()%73);
     }
@@ -97,7 +95,9 @@ void CMovie::display() {
     for(int mv=0;mv<movies->nMovies;mv++) {
         cout<<left<<endl;
         cout<<setw(11)<<"Movie: "<<movies->mvInfo[mv].mvName<<endl;
+//        cout<<"size"<<movies->mvInfo[mv].mvName.size()<<endl;
         cout<<setw(11)<<"Director: "<<movies->mvInfo[mv].dirName<<endl;
+//        cout<<"size"<<strlen(movies->mvInfo[mv].dirName)<<endl;
         cout<<setw(11)<<"Length: "<<movies->mvInfo[mv].runTime<<" Minutes"<<endl;
         cout<<setw(11)<<"Released: "<<movies->mvInfo[mv].yearRel<<endl;        
     }       
@@ -115,59 +115,59 @@ void CMovie::wrtTxt(fstream &out) {
 
 void CMovie::wrtBin(fstream &out) {
     for(int mv=0;mv<movies->nMovies;mv++) {
-        int namSize,dirSize;       //size of string and char array
+        int size;       //size of string and char array
                 
+        //Write string size
+        size=movies->mvInfo[mv].mvName.size();
+        out.write(reinterpret_cast<const char *>(&size),sizeof(int));
         //Write string
-        namSize=movies->mvInfo[mv].mvName.size();
-        out.write(reinterpret_cast<char *>(&namSize),sizeof(int));
-        out.write(movies->mvInfo[mv].mvName.c_str(),namSize);
-        
+        out.write(movies->mvInfo[mv].mvName.c_str(),size);
+        //Write char array size
+        size=strlen(movies->mvInfo[mv].dirName) + 1;
+        out.write(reinterpret_cast<const char *>(&size),sizeof(int));
         //Write char array
-        dirSize=strlen(movies->mvInfo[mv].dirName);
-        out.write((char *)&dirSize,sizeof(int));
-        out.write(movies->mvInfo[mv].dirName,dirSize);
-        
-        //Write integers
-        out.write(reinterpret_cast<char *>(&movies->mvInfo[mv].runTime),sizeof(int));
-        out.write(reinterpret_cast<char *>(&movies->mvInfo[mv].yearRel),sizeof(int));
+        out.write(movies->mvInfo[mv].dirName,size);
+        //Write shorts
+        out.write(reinterpret_cast<char *>(&movies->mvInfo[mv].runTime),sizeof(&movies->mvInfo[mv].runTime));
+        out.write(reinterpret_cast<char *>(&movies->mvInfo[mv].yearRel),sizeof(&movies->mvInfo[mv].yearRel));
     }
 }
 
 Movies* CMovie::readBin(fstream &in, int record) {
-    int nameSiz, dirSize,mvSize;      //Movie name, director name, and Movies size
+    int nameSiz,dirSize,dirCSize,mvSize;      //Movie name, director name, and Movies size
     Movies *mv=nullptr;
     string nameStr;
-    char *dirCAry;
+    char *dirCAry=nullptr;
     
     mv=new Movies;                 //Allocate Movies
     mv->mvInfo=new MovieInfo;        //Allocate structure in Movies
     
     nameSiz=mv->mvInfo->mvName.size();      //Store sizes
     dirSize=sizeof(mv->mvInfo->dirName);
-    mvSize=nameSiz+dirSize+16;          //Add sizes for string, char array, 4 ints
+    mvSize=nameSiz+dirCSize+20;          //Add sizes for string, char array, 2 ints,2 shorts
     
     in.seekg(record*mvSize,ios::beg);   //Set reading position
     
     //Need to read in number of bytes as well as the property for string and char array
     //Read in string
     in.read((char * )&nameSiz,sizeof(int));
-//    mv->mvInfo->mvName.resize(nameSiz);
+    mv->mvInfo->mvName.resize(nameSiz);
     in.read(&mv->mvInfo->mvName[0],nameSiz);
     
     //Read in char array
-    in.read((char * )&dirSize,sizeof(int));
-    dirCAry=new char[dirSize];
-    in.read(dirCAry,dirSize * sizeof(char));
+    in.read((char * )&dirCSize,sizeof(int));
+    dirCAry=new char[dirCSize];
+    in.read(dirCAry,dirCSize*sizeof(char));
     
-//    in.read(&dirSize,sizeof(char));
 //    in.read(mv->mvInfo->dirName,dirSize*sizeof(char));
     
-    in.read(reinterpret_cast<char *>(&mv->mvInfo->runTime),sizeof(int));
-    in.read(reinterpret_cast<char *>(&mv->mvInfo->yearRel),sizeof(int));
+    //Read in shorts
+    in.read(reinterpret_cast<char *>(&mv->mvInfo->runTime),sizeof(&mv->mvInfo->runTime));
+    in.read(reinterpret_cast<char *>(&mv->mvInfo->yearRel),sizeof(&mv->mvInfo->yearRel));
     
     cout<<"Movie: "<<mv->mvInfo->mvName<<endl;
 //    cout<<"Director:"<<mv->mvInfo->dirName<<endl;
-    cout<<"Runtime: "<<mv->mvInfo->runTime<<endl;
+    cout<<"Runtime: "<<mv->mvInfo->runTime<<" Minutes"<<endl;
     cout<<"Year: "<<mv->mvInfo->yearRel<<endl;
 
     return mv;
