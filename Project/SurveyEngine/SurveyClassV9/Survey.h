@@ -16,15 +16,15 @@
 
 struct SurveyQuestion {
     string question;        //Question
-    string responses[MAX];  //Possible responses
+    vector<string> responses;  //Possible responses
     int numResponses;       //number of response options for question
-    char questionType;      //Type of question
+    QType questionType;      //Type of question
 };
 
 struct SurveyInfo {
     string title;               //Survey title
     int numQuestions;           //Number of questions
-    vector<string> questions;   //Questions in a survey
+    vector<SurveyQuestion> questions;   //Questions in a survey
 };
 
 class Survey {
@@ -33,14 +33,14 @@ class Survey {
     public:
 //        Constructors/Destructor
         Survey();
-        Survey(string,int);    
+        Survey(string,int,vector<SurveyQuestion>);    
         ~Survey();
 //        Setter Functions
-        void addQuestion(string);
+        void addQuestion(SurveyQuestion);
         void deleteQuestion(int);
         
 //        Getter Functions
-        vector<string> getQuestions() const { return survey->questions;}
+        vector<SurveyQuestion> getQuestions() const { return survey->questions;}
         string getTitle() const { return survey->title;}
 //        Display and write to files
         void display(); 
