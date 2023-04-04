@@ -23,16 +23,11 @@ struct UserInfo {
     string password;
 };
 
-struct Users {
-    int numUsers;       //number of users
-    UserInfo *users;    //Structure within a structure
-};
-
 //Function Prototypes
 void dispMenu();
-Users *createUsers();    //Fill structure
-void display(Users *);    //Display users
-void destroy(Users *);          //De-allocate memory
+Users *fillDat(int &);       //Fill structure
+void display(Users*);    //Display users
+void destroy(Users*);        //Destroy users
 
 //Program Execution Begins Here!!!
 
@@ -40,24 +35,24 @@ int main(int argc, char** argv) {
     //Initialize the Random Number Seed
 
     //Declare Variables
-    Users *usersDB;
+    Users *users;
     
     //Initial Variables
-    usersDB=createUsers();
+    usersDB=fillDat();
     
     //Map the Inputs to the Outputs
     
    //Display the Inputs and Outputs 
-    display(usersDB);
+    display(users);
 
     //Clean Up the Dynamic Stuff
-    destroy (usersDB);
+    destroy(users);
     
     //Exit 
     return 0;
 }
 
-Users *createUsers() {
+Users *fillDat() {
     Users *usersDB=new Users;
     
     cout<<"Enter Number of Users: ";

@@ -12,8 +12,7 @@
 using namespace std; //Libraries compiled under std
 
 //User Libraries
-#include "CSurvey.h"
-#include "CUsers.h"
+#include "SurveyEngine.h"
 
 //Global Constants
 //Physics/Chemistry/Math/Conversion Higher Dimension Only
@@ -26,14 +25,19 @@ int main(int argc, char** argv) {
     //Initialize the Random Number Seed
 
     //Declare Variables
-    CUsers cusers;      //Create an instance of the CUsers class
+    string username,password;
+    User user;      //Create an instance of the CUsers class
     
     //Initial Variables
+    cout<<"Enter Username: "<<endl;
+    cin.getline(username,MAXSIZE);
+    cout<<"Enter Password: "<<endl;
+    cin.getline(password,MAXSIZE);
 
     //Map the Inputs to the Outputs
-    
+    user.setInfo(username,password);
    //Display the Inputs and Outputs 
-    cusers.display();
+    user.displayInfo();
 
     //Clean Up the Dynamic Stuff
     

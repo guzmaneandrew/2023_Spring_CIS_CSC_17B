@@ -13,16 +13,16 @@
 #ifndef CUSERS_H
 #define CUSERS_H
 
-#include "Users.h"
-
-class CUsers {
-private:
-    Users *usersDB;   //Pointer to dynamically allocated Users structure
-public:
-    CUsers();       //Constructor
-    ~CUsers();      //Destructor
-    void display(); //Display
-};
+//#include "User.h"
+//
+//class CUsers {
+//private:
+//    Users *usersDB;   //Pointer to dynamically allocated Users structure
+//public:
+//    CUsers();       //Constructor
+//    ~CUsers();      //Destructor
+//    void display(); //Display
+//};
 
 #endif /* CUSERS_H */
 

@@ -4,6 +4,7 @@
  * Created: April 2, 2023 @ 6:48 PM
  * Purpose: v4)Create static structure
  *          v5) Fill and display structure in functions
+ *          v6) Destroy structure in function
  */
 
 //System Libraries
@@ -22,12 +23,15 @@ using namespace std; //Libraries compiled under std
 struct UserInfo {
     string username;
     string password;
+    int numSurveys;
+    bool active;
 };
 
 //Function Prototypes
 void dispMenu();
-UserInfo *createUsers(int &);    //Fill structure
+UserInfo *fillDat(int &);       //Fill structure
 void display(UserInfo*,int);    //Display users
+void destroy(UserInfo*);        //Destroy users
 
 //Program Execution Begins Here!!!
 
@@ -49,44 +53,48 @@ int main(int argc, char** argv) {
     } while(numUsers>MAX);
     
     //Map the Inputs to the Outputs
-    users=createUsers(numUsers);
+    users=fillDat(numUsers);
     
    //Display the Inputs and Outputs 
     display(users,numUsers);
 
     //Clean Up the Dynamic Stuff
-    delete []users;
+    destroy(users);
     
     //Exit 
     return 0;
 }
 
-UserInfo *createUsers(int &numUsers) {
-    UserInfo *users=new UserInfo[numUsers];
+UserInfo *fillDat(int &numUsers) {
+    UserInfo *usrInfo=new UserInfo[numUsers];
     
     for(int i=0;i<numUsers;i++) {
         cout<<left;
         cout<<endl<<"User "<<i+1<<" Information"<<endl;
         cout<<"Enter Username: ";
-        cin>>users[i].username;
+        cin>>usrInfo[i].username;
         cin.ignore();
         cout<<"Enter Password: ";
-        cin>>users[i].password;
+        cin>>usrInfo[i].password;
     }
     cout<<endl;
     
-    return users;
+    return usrInfo;
 }
 
-void display(UserInfo *users,int numUsers) {
-    cout<<"Users Information"<<endl;
+void display(UserInfo *usrInfo,int numUsers) {
+    cout<<"User Information"<<endl;
     for(int i=0;i<numUsers;i++) {
         cout<<"User "<<i+1<<endl;
-        cout<<"Username: "<<users[i].username<<endl;
-        cout<<"Password: "<<users[i].password<<endl;  
+        cout<<"Username: "<<usrInfo[i].username<<endl;
+        cout<<"Password: "<<usrInfo[i].password<<endl;  
         cout<<endl;
     }
     cout<<endl;
+}
+
+void destroy(UserInfo *usrInfo) {
+    delete []usrInfo;
 }
 
 void dispMenu() {

@@ -13,11 +13,40 @@
 #ifndef SURVEY_H
 #define SURVEY_H
 
-#include "SurveyQuestion.h"
+const int MAX=10;       //MAX number of questions/responses
 
-struct Survey {
+struct SurveyQuestion {
+    string question;        //Question
+    string responses[MAX];  //Possible responses
+    int numResponses;       //number of response options for question
+    char questionType;      //Type of question
+};
+
+struct SurveyInfo {
+    string title;               //Survey title
     int numQuestions;           //Number of questions
-    SurveyQuestion *questions;  //Structure within a structure
+    vector<string> questions;   //Questions in a survey
+};
+
+class Survey {
+    private:
+        SurveyInfo *survey;        //Pointer to dynamic Survey structure
+    public:
+//        Constructors/Destructor
+        Survey();
+        Survey(string,int);    
+        ~Survey();
+//        Setter Functions
+        void addQuestion(string);
+        void deleteQuestion(int);
+        
+//        Getter Functions
+        vector<string> getQuestions() const { return survey->questions;}
+        string getTitle() const { return survey->title;}
+//        Display and write to files
+        void display(); 
+        void writeToFile(Survey *);
+        void readFromFile();
 };
 
 #endif /* SURVEY_H */

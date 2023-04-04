@@ -1,8 +1,5 @@
-build/Debug/GNU-MacOSX/main.o: main.cpp CSurvey.h Survey.h \
-  SurveyQuestion.h
+build/Debug/GNU-MacOSX/main.o: main.cpp Headers.h Survey.h
 
-CSurvey.h:
+Headers.h:
 
 Survey.h:
-
-SurveyQuestion.h:
