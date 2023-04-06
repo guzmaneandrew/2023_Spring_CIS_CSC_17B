@@ -19,7 +19,8 @@
 
 struct SurveyQInfo {
     char question[QRSIZE]; //Question
-    char response[QRSIZE]; //Response
+    vector<string> responses; //Responses
+    //    char response[QRSIZE]; //Response
     int numResponses; //number of responses
 };
 
@@ -68,8 +69,10 @@ public:
 
             //Read in responses
             for (int j = 0; j < info->questions[i].numResponses; j++) {
+                string response;
                 cout << "Enter Response " << j + 1 << ": ";
-                cin.getline(info->questions[i].response, QRSIZE);
+                getline(cin, response);
+                info->questions[i].responses.push_back(response);
             }
         }
     }
@@ -90,21 +93,48 @@ public:
         }
     }
 
-    //    void setQuestion(int i, string q) {
-    //        info->questions[i].question = q;
-    //    }
+    void setQuestion(int index, char q[]) {
+        for (int i = 0; i < QRSIZE; i++) {
+            if (q[i] != '\0') {
+                info->questions[index].question[i] = q[i];
+            }
+        }
+    }
+
+    void setStatus(bool status) {
+        info->active = status;
+    }
+
+    //Getters
+
+    int getNumQ() const {
+        return info->numQuestions;
+    }
+
+    char *getTitle() const {
+        return info->title;
+    }
+
+    vector<SurveyQInfo> getSurvQInfo() const {
+        return info->questions;
+    }
+
+    bool getStatus() const {
+        return info->active;
+    }
 
     void display() {
         //Display survey
         cout << endl;
         cout << "Title: " << info->title << endl;
+        cout << "Status: " << boolalpha << info->active << endl;
         for (int i = 0; i < info->numQuestions; i++) {
             cout << endl;
             cout << "Question " << i + 1 << ": " << info->questions[i].question << endl;
             for (int j = 0; j < info->questions[i].numResponses; j++) {
                 cout << left;
                 cout << setw(2) << j + 1 << ") ";
-                cout << info->questions[i].response<< endl;
+                cout << info->questions[i].responses[j] << endl;
             }
         }
     }
