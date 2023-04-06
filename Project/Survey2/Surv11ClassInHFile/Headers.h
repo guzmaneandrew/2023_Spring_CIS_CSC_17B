@@ -17,7 +17,7 @@
 #include <cstdlib>    //Random Number Generator, setting seed, etc....
 #include <iomanip>    //Formatting Library
 #include <vector>     //Vector library
-#include <array>      //Array library
+#include <fstream>    //Filestream library
 using namespace std; //Libraries compiled under std
 
 //Global Constants
