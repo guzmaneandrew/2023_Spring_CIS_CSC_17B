@@ -19,16 +19,17 @@
 
 struct SurveyQInfo {
     char question[QRSIZE]; //Question
-    vector<string> responses; //Responses
-    //    char response[QRSIZE]; //Response
-    int numResponses; //number of responses
+    QType type;         //Question type
+    int numRespOptions; //Number of response options
+    vector<string> respOptions; //Response options
+    vector<string> responses;   //Responses
 };
 
 struct SurveyInfo {
-    int numQuestions; //Number of questions
     char title[TSIZE]; //Title of info
-    vector<SurveyQInfo> questions; //questions in Survey
+    int numQuestions; //Number of questions
     bool active; //Status of survey
+    vector<SurveyQInfo> questions; //questions in Survey
 };
 
 class Survey {
@@ -38,16 +39,15 @@ public:
 
     Survey() {
         info = new SurveyInfo; //Declare pointer to SurveyInfo object
+        strcpy(info->title, " ");
         info->numQuestions = 0;
         info->active = false;
     }
 
-    Survey(char title[], int numQ) {
+    Survey(string title, int numQ) {
         info = new SurveyInfo; //Declare pointer to SurveyInfo object
         info->numQuestions = numQ;
-        for (int i = 0; i < TSIZE; i++) {
-            info->title[i] = title[i];
-        }
+        strcpy(info->title, title.c_str());
         info->active = true;
 
         //Allocate memory for the questions vector
@@ -55,24 +55,29 @@ public:
 
         //Set information for every survey question
         for (int i = 0; i < info->numQuestions; i++) {
+            string q;
             cout << endl;
-            cout << "Enter Question " << i + 1 << ": ";
+            cout << "Enter Question (up to 100 char) " << i + 1 << ": ";
             //Read in the question
-            cin.getline(info->questions[i].question, QRSIZE);
+            getline(cin,q);
+            strcpy(info->questions[i].question, q.c_str());
 
-            //Read in number of responses
+            //Read in number of respOptions
             do {
-                cout << "Enter Number of Responses (up to 10): ";
-                cin >> info->questions[i].numResponses;
+                cout << "Enter Number of Response Options (up to 10): ";
+                cin >> info->questions[i].numRespOptions;
                 cin.ignore();
-            } while (info->questions[i].numResponses > RSIZE);
+            } while (info->questions[i].numRespOptions > RSIZE);
 
-            //Read in responses
-            for (int j = 0; j < info->questions[i].numResponses; j++) {
-                string response;
-                cout << "Enter Response " << j + 1 << ": ";
-                getline(cin, response);
-                info->questions[i].responses.push_back(response);
+            //Allocate memory for the response options vector
+            info->questions[i].respOptions.resize(info->questions[i].numRespOptions);
+
+            //Read in respOptions
+            for (int j = 0; j < info->questions[i].numRespOptions; j++) {
+                string respOpt;
+                cout << "Enter Response Option (up to 100 char) " << j + 1 << ": ";
+                getline(cin,respOpt);
+                info->questions[i].respOptions.push_back(respOpt);
             }
         }
     }
@@ -90,6 +95,31 @@ public:
     void setTitle(char title[]) {
         for (int i = 0; i < TSIZE; i++) {
             info->title[i] = title[i];
+        }
+    }
+
+    void setQuestions(vector<SurveyQInfo> qs) {
+        //Set information for every survey question
+        for (int i = 0; i < info->numQuestions; i++) {
+            cout << endl;
+            cout << "Enter Question (up to 100 char) " << i + 1 << ": ";
+            //Read in the question
+            cin.getline(info->questions[i].question, QRSIZE);
+
+            //Read in number of respOptions
+            do {
+                cout << "Enter Number of Responses (up to 10): ";
+                cin >> info->questions[i].numRespOptions;
+                cin.ignore();
+            } while (info->questions[i].numRespOptions > RSIZE);
+
+            //Read in respOptions
+            for (int j = 0; j < info->questions[i].numRespOptions; j++) {
+                char response[QRSIZE];
+                cout << "Enter Response (up to 100 char) " << j + 1 << ": ";
+                cin>>response;
+                info->questions[i].respOptions.push_back(response);
+            }
         }
     }
 
@@ -131,12 +161,47 @@ public:
         for (int i = 0; i < info->numQuestions; i++) {
             cout << endl;
             cout << "Question " << i + 1 << ": " << info->questions[i].question << endl;
-            for (int j = 0; j < info->questions[i].numResponses; j++) {
+            for (int j = 0; j < info->questions[i].numRespOptions; j++) {
                 cout << left;
                 cout << setw(2) << j + 1 << ") ";
-                cout << info->questions[i].responses[j] << endl;
+                cout << info->questions[i].respOptions[j] << endl;
             }
         }
+    }
+
+    void saveToBin() {
+        fstream surveyDB("SurveyInfo.dat", ios::in | ios::app | ios::binary);
+        surveyDB.seekp(ios::app);
+
+        //Write the title - 50 bytes
+        surveyDB.write(info->title, sizeof (info->title));
+
+        // Write number of questions - 4 bytes
+        surveyDB.write(reinterpret_cast<char*> (&info->numQuestions), sizeof (int));
+
+        //Write status  - 1 byte
+        surveyDB.write(reinterpret_cast<char*> (&info->active), sizeof (bool));
+
+        // Write the survey questions vector
+        for (int i = 0; i < info->numQuestions; i++) {
+            // Write the question string    - 100 bytes
+            surveyDB.write(info->questions[i].question, sizeof(info->questions[i].question));
+
+            // Write the number of respOptions - 4 bytes
+            surveyDB.write(reinterpret_cast<char*> (&info->questions[i].numRespOptions), sizeof (int));
+
+            // Write the respOptions - numRespOptions * 100bytes
+            for (int j = 0; j < info->questions[i].numRespOptions; j++) {
+                surveyDB.write(info->questions[i].respOptions[j].c_str(), sizeof(info->questions[i].respOptions[j]));
+            }
+        }
+
+        surveyDB.close();
+    }
+
+    void readFromBin(char *b) {
+        ifstream surveyDB("SurveyInfo.dat", ios::binary);
+        surveyDB.read(b, TSIZE);
     }
 
     //    void writeBinary() {
@@ -161,14 +226,14 @@ public:
     //            surveyDB.write(reinterpret_cast<char*> (&questionLen), sizeof (int));
     //            surveyDB.write(info->questions[i].question.c_str(), questionLen);
     //
-    //            // Write the number of responses
-    //            surveyDB.write(reinterpret_cast<char*> (&info->questions[i].numResponses), sizeof (int));
+    //            // Write the number of respOptions
+    //            surveyDB.write(reinterpret_cast<char*> (&info->questions[i].numRespOptions), sizeof (int));
     //
-    //            // Write the responses
-    //            for (int j = 0; j < info->questions[i].numResponses; j++) {
-    //                int responseLen = info->questions[i].responses[j].size();
+    //            // Write the respOptions
+    //            for (int j = 0; j < info->questions[i].numRespOptions; j++) {
+    //                int responseLen = info->questions[i].respOptions[j].size();
     //                surveyDB.write(reinterpret_cast<char*> (&responseLen), sizeof (int));
-    //                surveyDB.write(info->questions[i].responses[j].c_str(), responseLen);
+    //                surveyDB.write(info->questions[i].respOptions[j].c_str(), responseLen);
     //            }
     //        }
     //
@@ -210,19 +275,19 @@ public:
     //            info->questions[i].question = qCArr;
     //            delete[] qCArr;
     //
-    //            // Read the number of responses
-    //            int numResponses;
-    //            surveyDB.read(reinterpret_cast<char*> (&numResponses), sizeof (int));
-    //            info->questions[i].numResponses = numResponses;
+    //            // Read the number of respOptions
+    //            int numRespOptions;
+    //            surveyDB.read(reinterpret_cast<char*> (&numRespOptions), sizeof (int));
+    //            info->questions[i].numRespOptions = numRespOptions;
     //
-    //            // Read the responses
-    //            for (int j = 0; j < numResponses; j++) {
+    //            // Read the respOptions
+    //            for (int j = 0; j < numRespOptions; j++) {
     //                int responseLen;
     //                surveyDB.read(reinterpret_cast<char*> (&responseLen), sizeof (int));
     //                char* respCArr = new char[responseLen + 1];
     //                surveyDB.read(respCArr, responseLen);
     //                respCArr[responseLen] = '\0';
-    //                info->questions[i].responses[j] = respCArr;
+    //                info->questions[i].respOptions[j] = respCArr;
     //                delete[] respCArr;
     //            }
     //        }

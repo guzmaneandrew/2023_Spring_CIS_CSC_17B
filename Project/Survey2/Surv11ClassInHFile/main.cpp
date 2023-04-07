@@ -16,21 +16,25 @@ int main(int argc, char** argv) {
     //Initialize the Random Number Seed
 
     //Declare & Initialize Variables
-    char title[TSIZE];
+    string title;
     int numSurv,numQ;
+    vector<Survey *> surveys;
     
     cout<<"Enter Title: ";
-    cin.getline(title, TSIZE);
+    getline(cin,title);
     cout<<"Enter Number of Questions: ";
     cin>>numQ;
     cin.ignore();
     Survey survey(title,numQ);
-    survey.display();
+    
+    survey.saveToBin();
 
     //Map the Inputs to the Outputs
 
     //Display the Inputs and Outputs
-    
+//    for(int i=0;i<2;i++) {
+//        surveys[i]->display();
+//    }
 
     //Clean Up the Dynamic Stuff
 

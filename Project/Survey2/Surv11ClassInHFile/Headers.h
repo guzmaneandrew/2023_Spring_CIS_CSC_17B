@@ -18,14 +18,17 @@
 #include <iomanip>    //Formatting Library
 #include <vector>     //Vector library
 #include <fstream>    //Filestream library
+#include <cstring>    //C string library
 using namespace std; //Libraries compiled under std
+
+enum QType {SINGLE,MULTIPLE,WRITEIN};   //Question type
 
 //Global Constants
 //Physics/Chemistry/Math/Conversion Higher Dimension Only
 const int QRSIZE = 100; //max size of question and response
 const int TSIZE = 50; //max size of title
 const int RSIZE = 10; //max number of response options per question
-const int SSIZE = 10; //max number of info questions in a info
+const int SSIZE = 10; //max number of survey questions in a survey
 
 #endif /* HEADERS_H */
 
