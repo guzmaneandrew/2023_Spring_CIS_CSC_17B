@@ -28,13 +28,12 @@ int main(int argc, char** argv) {
     Survey survey(title,numQ);
     
     survey.saveToBin();
+    survey.readFromBin();
+    
 
     //Map the Inputs to the Outputs
 
     //Display the Inputs and Outputs
-//    for(int i=0;i<2;i++) {
-//        surveys[i]->display();
-//    }
 
     //Clean Up the Dynamic Stuff
 

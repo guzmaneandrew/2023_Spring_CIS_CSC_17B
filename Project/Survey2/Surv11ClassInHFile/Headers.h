@@ -19,6 +19,7 @@
 #include <vector>     //Vector library
 #include <fstream>    //Filestream library
 #include <cstring>    //C string library
+#include <array>      //Array library
 using namespace std; //Libraries compiled under std
 
 enum QType {SINGLE,MULTIPLE,WRITEIN};   //Question type
