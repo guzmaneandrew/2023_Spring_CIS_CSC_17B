@@ -158,6 +158,10 @@ public:
 
     //Getters
 
+    SurveyInfo *getSurvPtr() {
+        return info;
+    }
+    
     int getNumQ() const {
         return info->numQuestions;
     }
@@ -262,7 +266,7 @@ public:
         // Read the status - 1 byte
         bool active;
         surveyDB.read(reinterpret_cast<char*> (&active), sizeof (active));
-        cout << "Status: " << active << endl << endl;
+        cout << "Active: " << boolalpha << active << endl << endl;
 
         // Read the number of SurveyQuestion structs - 4 bytes
         int numSurvQ;
@@ -296,66 +300,66 @@ public:
         surveyDB.close();
     }
 
-    Survey readFromBin2() {
-        fstream surveyDB("SurveyInfo.dat", ios::in | ios::binary);
-
-        if (!surveyDB) {
-            cout << "Error: Unable to open file for read." << endl;
-            exit(1);
-        }
-
-        SurveyInfo *info = new SurveyInfo;
-
-        // Read the title - 50 bytes
-        surveyDB.read(info->title, sizeof (info->title));
-        cout << "Title: " << info->title << endl;
-
-        // Read number of questions - 4 bytes
-        surveyDB.read(reinterpret_cast<char*> (&info->numQuestions), sizeof (int));
-        cout << "Number of Questions: " << info->numQuestions << endl;
-
-        // Read status - 1 byte
-        surveyDB.read(reinterpret_cast<char*> (&info->active), sizeof (bool));
-        cout << "Status: " << info->active << endl;
-
-        // Read the number of SurveyQuestion structs - 4 bytes
-        int numSurvQ;
-        surveyDB.read(reinterpret_cast<char*> (&numSurvQ), sizeof (int));
-        cout << "Number of SurveyQuestion structs: " << numSurvQ << endl;
-
-        // Read the survey questions vector
-        for (int i = 0; i < numSurvQ; i++) {
-            SurveyQInfo qInfo;
-
-            // Read the question string - 100 bytes
-            surveyDB.read(qInfo.question, sizeof (qInfo.question));
-            cout << "Question: " << qInfo.question << endl;
-
-            // Read the respOptions - 5 * (100 bytes)
-            surveyDB.read(qInfo.respOpt1, sizeof (qInfo.respOpt1));
-            cout << "Response Option 1: " << qInfo.respOpt1 << endl;
-
-            surveyDB.read(qInfo.respOpt2, sizeof (qInfo.respOpt2));
-            cout << "Response Option 2: " << qInfo.respOpt2 << endl;
-
-            surveyDB.read(qInfo.respOpt3, sizeof (qInfo.respOpt3));
-            cout << "Response Option 3: " << qInfo.respOpt3 << endl;
-
-            surveyDB.read(qInfo.respOpt4, sizeof (qInfo.respOpt4));
-            cout << "Response Option 4: " << qInfo.respOpt4 << endl;
-
-            surveyDB.read(qInfo.respOpt5, sizeof (qInfo.respOpt5));
-            cout << "Response Option 5: " << qInfo.respOpt5 << endl;
-
-            info->questions.push_back(qInfo);
-        }
-
-        surveyDB.close();
-
-        Survey survey;
-        survey.info = info;
-        return survey;
-    }
+//    Survey readFromBin2() {
+//        fstream surveyDB("SurveyInfo.dat", ios::in | ios::binary);
+//
+//        if (!surveyDB) {
+//            cout << "Error: Unable to open file for read." << endl;
+//            exit(1);
+//        }
+//
+//        SurveyInfo *info = new SurveyInfo;
+//
+//        // Read the title - 50 bytes
+//        surveyDB.read(info->title, sizeof (info->title));
+//        cout << "Title: " << info->title << endl;
+//
+//        // Read number of questions - 4 bytes
+//        surveyDB.read(reinterpret_cast<char*> (&info->numQuestions), sizeof (int));
+//        cout << "Number of Questions: " << info->numQuestions << endl;
+//
+//        // Read status - 1 byte
+//        surveyDB.read(reinterpret_cast<char*> (&info->active), sizeof (bool));
+//        cout << "Status: " << info->active << endl;
+//
+//        // Read the number of SurveyQuestion structs - 4 bytes
+//        int numSurvQ;
+//        surveyDB.read(reinterpret_cast<char*> (&numSurvQ), sizeof (int));
+//        cout << "Number of SurveyQuestion structs: " << numSurvQ << endl;
+//
+//        // Read the survey questions vector
+//        for (int i = 0; i < numSurvQ; i++) {
+//            SurveyQInfo qInfo;
+//
+//            // Read the question string - 100 bytes
+//            surveyDB.read(qInfo.question, sizeof (qInfo.question));
+//            cout << "Question: " << qInfo.question << endl;
+//
+//            // Read the respOptions - 5 * (100 bytes)
+//            surveyDB.read(qInfo.respOpt1, sizeof (qInfo.respOpt1));
+//            cout << "Response Option 1: " << qInfo.respOpt1 << endl;
+//
+//            surveyDB.read(qInfo.respOpt2, sizeof (qInfo.respOpt2));
+//            cout << "Response Option 2: " << qInfo.respOpt2 << endl;
+//
+//            surveyDB.read(qInfo.respOpt3, sizeof (qInfo.respOpt3));
+//            cout << "Response Option 3: " << qInfo.respOpt3 << endl;
+//
+//            surveyDB.read(qInfo.respOpt4, sizeof (qInfo.respOpt4));
+//            cout << "Response Option 4: " << qInfo.respOpt4 << endl;
+//
+//            surveyDB.read(qInfo.respOpt5, sizeof (qInfo.respOpt5));
+//            cout << "Response Option 5: " << qInfo.respOpt5 << endl;
+//
+//            info->questions.push_back(qInfo);
+//        }
+//
+//        surveyDB.close();
+//
+//        Survey survey;
+//        survey.info = info;
+//        return survey;
+//    }
 };
 
 #endif /* SURVEY_H */
