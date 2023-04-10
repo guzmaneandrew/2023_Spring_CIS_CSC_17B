@@ -19,7 +19,7 @@
 //Structure Definitions
 
 //Function Prototypes
-
+void writeToFile(const Survey&);
 //Program Execution Begins Here!!!
 
 int main(int argc, char** argv) {
@@ -49,4 +49,30 @@ int main(int argc, char** argv) {
     //Exit 
     return 0;
 }
+
+void writeToFile(Survey& survey) {
+    ofstream outFile("SurveyInfo.dat", ios::binary);
+
+    // Write the Survey title to the file
+    outFile.write(survey.title, TSIZE);
+
+    // Write the number of questions to the file
+    outFile.write(reinterpret_cast<const char*>(&survey.numQuestions), sizeof(int));
+
+    // Loop through the questions and write each one to the file
+    for (int i = 0; i < survey.numQuestions; i++) {
+        QuestionInfo* qInfo = survey.getQuestions()[i].getQInfo();
+
+        // Write the QuestionInfo struct to the file
+        outFile.write(reinterpret_cast<const char*>(qInfo), sizeof(QuestionInfo));
+
+        // Loop through the ResponseInfo structs and write each one to the file
+        for (int j = 0; j < qInfo->numRespOptions; j++) {
+            outFile.write(qInfo->respInfo[j].respOption, QRSIZE);
+        }
+    }
+
+    outFile.close();
+}
+
 
