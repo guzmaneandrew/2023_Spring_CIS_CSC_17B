@@ -142,22 +142,22 @@ public:
     }
 
     void prntSrv() {
-        int survNum, indx,validNum;
+        int survNum, indx, validNum;
 
-        validNum=surveys.size();
-        
         //List all surveys
         listAllSrv();
+        
+        validNum = surveys.size();
 
         //Indicate which survey to view
         do {
             cout << "Enter the Number of the Survey to View: ";
             cin>>survNum;
             cin.ignore();
-            if(survNum <= 0 || survNum > validNum) {
-                cout<<"Invalid Surven Number. Enter 1 - "<<validNum<<endl;
+            if (survNum <= 0 || survNum > validNum) {
+                cout << "Invalid Survey Number. Enter 1 - " << validNum << endl;
             }
-        } while(survNum <=0 || survNum > validNum);
+        } while (survNum <= 0 || survNum > validNum);
 
         indx = survNum - 1;
 
@@ -231,7 +231,7 @@ public:
                     break;
             }
         } while (choice != 0);
-        
+
         reloadSrvs();
     }
 
@@ -277,20 +277,27 @@ public:
 
     void addSrvQ(Survey *survey) {
         survey->addQ();
-//        reloadSrvs();
         survey->display();
     }
 
     void deleteQ(Survey *survey) {
-        int numQ;
-        cout << "Enter Question to Delete: ";
-        cin>>numQ;
-        cin.ignore();
+        int numQ, indx, validNum;
 
-        survey->deleteQ(--numQ);
+        validNum = survey->getNumQs();
+
+        do {
+            cout << "Enter Number of Question to Delete: ";
+            cin>>numQ;
+            cin.ignore();
+            if (numQ <= 0 || numQ > validNum) {
+                cout << "Invalid Question Number. Enter 1 - " << validNum << endl;
+            }
+        } while (numQ <= 0 || numQ > validNum);
+
+
+        indx = numQ - 1;
+        survey->deleteQ(indx);
         survey->display();
-
-//        reloadSrvs();
     }
 
     void updtTitle(Survey *survey) {
@@ -300,15 +307,11 @@ public:
 
         survey->setTitle(newTitle);
         survey->display();
-
-//        reloadSrvs();
     }
 
     void updtStatus(Survey *survey) {
         survey->setStatus(!survey->getStatus());
         survey->display();
-
-//        reloadSrvs();
     }
 
     void updtSrvQs(Survey *survey) {
@@ -431,15 +434,14 @@ public:
                     break;
             }
         } while (choice != 0);
-        
-        cout << "Question: ";
+
+        cout << endl << "Question: ";
         q->display();
-        
+
         reloadSrvs();
     }
 
     void updtROPt(Question *q) {
-        assert(q != nullptr);
         int validIndx = q->getNumResp();
         string response;
 
@@ -469,10 +471,19 @@ public:
     }
 
     void deleteROpt(Question *q) {
-        int numR, indx;
-        cout << "Enter Response to Delete: ";
-        cin>>numR;
-        cin.ignore();
+        int numR, indx, validNum;
+
+        validNum = q->getNumResp();
+
+        do {
+            cout << "Enter Response to Delete: ";
+            cin>>numR;
+            cin.ignore();
+            if (numR <= 0 || numR > validNum) {
+                cout << "Invalid Response Number. Enter 1 - " << validNum << endl;
+            }
+        } while (numR <= 0 || numR > validNum);
+
         indx = numR - 1;
         q->deleteROpt(indx);
 
