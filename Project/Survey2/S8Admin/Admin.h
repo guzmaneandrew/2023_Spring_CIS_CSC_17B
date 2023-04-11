@@ -35,7 +35,9 @@ public:
             cout << " 4) List Inactive Surveys" << endl;
             cout << " 5) View a Survey" << endl;
             cout << " 6) Update a Survey" << endl;
-            cout << " 7) Delete All Surveys" << endl;
+            cout << " 7) Add Admin" << endl;
+            cout << " 8) List Admins" << endl;
+            cout << "99) Delete All Surveys" << endl;
             cout << "-1 ) Logout" << endl;
             cin>>choice;
             cin.ignore();
@@ -52,13 +54,49 @@ public:
             } else if (choice == 6) {
                 updtSrv();
             } else if (choice == 7) {
+                addAdmin();
+            } else if (choice == 8) {
+                listAdmins();
+            } else if (choice == 99) {
                 deleteAll();
             }
 
         } while (choice != -1);
     };
 
+    void addAdmin() {
+        //Add admins to admin DB
+        string username, password;
+        cout << "Enter the Username for the Admin: ";
+        cin>>username;
+        cout << "Enter the Password for the Admin: ";
+        cin>>password;
+        
+        AdminInfo newAdmin;
+        strcpy(newAdmin.username,username.c_str());
+        strcpy(newAdmin.password,password.c_str());
+
+        fstream adminDB("AdminInfo.dat", ios::in | ios::app | ios::binary);
+        adminDB.seekp(ios::app);
+        adminDB.write(reinterpret_cast<char *> (&newAdmin), sizeof (newAdmin));
+        adminDB.close();
+    }
+    
+    void listAdmins() {
+        fstream adminDB("AdminInfo.dat", ios::in | ios::app | ios::binary);
+        AdminInfo temp;
+
+        cout << endl << "Username \t Password" << endl << endl;
+        adminDB.seekg(ios::beg);
+        while (adminDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
+            cout << left << setw(17);
+            cout << temp.username << setw(17) << temp.password << endl;
+        }
+        adminDB.close();
+    }
+
     void createSrv() {
+        //Create survey and add to survey DB
         char title[TSIZE];
         int numQs;
         cout << endl << "CREATE NEW SURVEY" << endl;
@@ -146,7 +184,7 @@ public:
 
         //List all surveys
         listAllSrv();
-        
+
         validNum = surveys.size();
 
         //Indicate which survey to view
