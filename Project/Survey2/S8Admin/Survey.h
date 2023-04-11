@@ -68,6 +68,35 @@ public:
         questions.push_back(question);
     }
 
+    void addQ() {
+        numQs++;
+        //Receive input for new survey Question
+        char q[QRSIZE];
+        int type, numResp;
+        vector<string> responses;
+
+        cout << "Enter Question: ";
+        cin.getline(q, QRSIZE);
+
+        cout << "Enter Question Type(1 = Single, 2 = Multiple, 3 = WriteIn): ";
+        cin >> type;
+
+        cout << "Enter Number of Response Options: ";
+        cin >> numResp;
+        cin.ignore();
+
+        for (int i = 0; i < numResp; i++) {
+            string response;
+            cout << "Enter Response Option " << i + 1 << ": ";
+            getline(cin, response);
+            responses.push_back(response);
+        }
+
+        //Create new Question object
+        Question *question = new Question(q, type, numResp, responses);
+        questions.push_back(question);
+    }
+
     const char *getTitle() const {
         return title;
     }
@@ -95,12 +124,12 @@ public:
 
     void deleteQ(int i) {
         if (i >= 0 && i < questions.size()) {
+            numQs--;
             delete questions[i];
             questions.erase(questions.begin() + i);
         } else {
-            cout<<"ERROR: Invalid Question Index."<<endl;
+            cout << "ERROR: Invalid Question Index." << endl;
         }
-
     }
 
     bool getStatus() const {
@@ -116,15 +145,17 @@ public:
     }
 
     Question *getQ(int i) {
+        i--; //vectors are 0 indexed
         return questions[i];
     }
 
     void display() {
         cout << "------------------------" << endl;
         cout << "Title: " << title << endl;
-        cout << "Status: " << boolalpha << status << endl;
-        cout << "Number of Questions: " << numQs << endl;
+        cout << "Active: " << boolalpha << status << endl;
+        cout << "Number of Questions: " << numQs << endl << endl;
         for (int i = 0; i < numQs; i++) {
+            cout << "Question " << i + 1 << ": ";
             questions[i]->display();
         }
     }

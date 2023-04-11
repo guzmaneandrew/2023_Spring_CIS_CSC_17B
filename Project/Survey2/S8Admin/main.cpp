@@ -3,7 +3,7 @@
  * Author: Andrew Guzman
  * Created: April 8, 2023 @ 10:44 PM
  * Purpose: v8) Added bool field to Survey class
- * Addming more functions to Admin class to handle Survey class
+ * Adding more functions to Admin class to handle Survey class
 */
 //System Libraries
 #include "Headers.h"

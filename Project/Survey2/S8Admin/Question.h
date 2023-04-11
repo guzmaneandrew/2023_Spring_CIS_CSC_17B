@@ -12,9 +12,13 @@
 #ifndef QUESTION_H
 #define QUESTION_H
 #include "Headers.h"
-enum QType {SINGLE=1,MULTIPLE=2,WRITEIN=3};   //Question type
+
+enum QType {
+    SINGLE = 1, MULTIPLE = 2, WRITEIN = 3
+}; //Question type
 
 const int QRSIZE = 100; //max size of question and response
+
 class Question {
 private:
     char question[QRSIZE];
@@ -39,17 +43,40 @@ public:
     void setQ(char q[]) {
         strcpy(question, q);
     }
-    
+
     void setType(int t) {
-        typeInt=t;
+        typeInt = t;
     }
-    
+
     void setNumResp(int n) {
-        numRespOptions=n;
+        numRespOptions = n;
+    }
+
+    void setRespOptions(vector<string> options) {
+        respOptions = options;
+    }
+
+    void setResp(int i) {
+        string response;
+        cout << endl<< "Enter New Response Option: ";
+        getline(cin, response);
+
+        if (i >= 0 && i < respOptions.size()) {
+            respOptions[i] = response;
+        }
+    }
+
+    void addResp() {
+        numRespOptions++;
+        string response;
+        cout << "Enter New Response Option: ";
+        getline(cin, response);
+        respOptions.push_back(response);
     }
     
-    void setRespOptions(vector<string> options) {
-        respOptions=options;
+    void deleteROpt(int i) {
+        numRespOptions--;
+        respOptions.erase(respOptions.begin() + i);
     }
 
     const char *getQ() const {
@@ -61,7 +88,7 @@ public:
     }
 
     int getNumResp() const {
-        return numRespOptions;
+        return respOptions.size();
     }
 
     vector<string> getRespOptions() const {
@@ -69,20 +96,20 @@ public:
     }
 
     string dispType() {
-        if(typeInt==SINGLE) return "Single Choice";
-        else if(typeInt==MULTIPLE) return "Multiple Choice";
-        else if(typeInt==WRITEIN) return "Write-In Response";
+        if (typeInt == SINGLE) return "Single Choice";
+        else if (typeInt == MULTIPLE) return "Multiple Choice";
+        else if (typeInt == WRITEIN) return "Write-In Response";
         else return " ";
     }
-    
+
     void display() {
-        cout << endl;
-        cout << "Question: " << question << endl;
-        cout<< "Type: "<< dispType() <<endl;
+        cout << question << endl;
+        cout << "Type: " << dispType() << endl;
         cout << left;
         for (int i = 0; i < numRespOptions; i++) {
             cout << setw(3) << i + 1 << ") " << respOptions[i] << endl;
         }
+        cout << endl;
     }
 };
 
