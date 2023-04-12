@@ -187,20 +187,23 @@ public:
 
         validNum = surveys.size();
 
-        //Indicate which survey to view
-        do {
-            cout << "Enter the Number of the Survey to View: ";
-            cin>>survNum;
-            cin.ignore();
-            if (survNum <= 0 || survNum > validNum) {
-                cout << "Invalid Survey Number. Enter 1 - " << validNum << endl;
-            }
-        } while (survNum <= 0 || survNum > validNum);
+        if(surveys.size() != 0) {
+            //Indicate which survey to view
+            do {
 
-        indx = survNum - 1;
+                cout << "Enter the Number of the Survey to View: ";
+                cin>>survNum;
+                cin.ignore();
+                if (survNum <= 0 || survNum > validNum) {
+                    cout << "Invalid Survey Number. Enter 1 - " << validNum << endl;
+                }
+            } while (survNum <= 0 || survNum > validNum);
 
-        cout << "VIEW SURVEY" << endl;
-        surveys[indx]->display();
+            indx = survNum - 1;
+
+            cout << "VIEW SURVEY" << endl;
+            surveys[indx]->display();       
+        }
     }
 
     void updtSrv() {
