@@ -107,12 +107,12 @@ public:
         cin.ignore();
         Survey *surv = new Survey(title, numQs);
         surveys.push_back(surv);
-        surv->saveToBin();
+        surv->saveToBin("SurveyInfo.dat");
         surv->display();
     }
 
     void listAllSrv() {
-        readFromBin();
+        readFromBin("SurveyInfo.dat");
 
         cout << endl << "ALL SURVEYS" << endl;
         if (surveys.size() == 0) {
@@ -134,7 +134,7 @@ public:
 
     void listActvSrv() {
         bool none = true;
-        readFromBin();
+        readFromBin("SurveyInfo.dat");
 
         cout << endl << "ACTIVE SURVEYS" << endl;
         if (surveys.size() == 0) {
@@ -158,7 +158,7 @@ public:
 
     void listInacSrv() {
         bool none = true;
-        readFromBin();
+        readFromBin("SurveyInfo.dat");
 
         cout << endl << "INACTIVE SURVEYS" << endl;
         if (surveys.size() == 0) {
@@ -270,7 +270,7 @@ public:
             }
         } while (choice != 0);
 
-        reloadSrvs();
+        reloadSrvs("SurveyInfo.dat");
     }
 
     void deleteAll() {
@@ -305,7 +305,7 @@ public:
         } while (confirm2 != "admin password");
 
         if (confirm2 == "admin password" && confirm1 == "D") {
-            clearBin();
+            clearBin("SurveyInfo.dat");
             surveys.clear();
             cout << endl << "All Surveys Have Been Deleted from the Database..." << endl;
         }
@@ -404,7 +404,7 @@ public:
 
         survey->display();
 
-        reloadSrvs();
+        reloadSrvs("SurveyInfo.dat");
     }
 
     void updtQ(Question *q) {
@@ -476,7 +476,7 @@ public:
         cout << endl << "Question: ";
         q->display();
 
-        reloadSrvs();
+        reloadSrvs("SurveyInfo.dat");
     }
 
     void updtROPt(Question *q) {
@@ -529,9 +529,9 @@ public:
         q->display();
     }
 
-    void readFromBin() {
+    void readFromBin(string file) {
         surveys.clear(); //Clear vector first to read entire file contents to it
-        fstream surveyDB("SurveyInfo.dat", ios::in | ios::binary);
+        fstream surveyDB(file, ios::in | ios::binary);
         if (!surveyDB) {
             cerr << "ERROR: Unable to Open File for Reading." << endl;
             return;
@@ -592,21 +592,21 @@ public:
         surveyDB.close();
     }
 
-    void clearBin() {
+    void clearBin(string file) {
         //Deletes all contents of the binary file
-        ofstream surveyDB("SurveyInfo.dat", ios::out | ios::trunc);
+        ofstream surveyDB(file, ios::out | ios::trunc);
         surveyDB.close();
     }
 
-    void reloadSrvs() {
+    void reloadSrvs(string file) {
         //Clear binary file, output vector surveys to binary, then write to bin
-        clearBin();
+        clearBin(file);
 
         for (int i = 0; i < surveys.size(); i++) {
-            surveys[i]->saveToBin();
+            surveys[i]->saveToBin(file);
         }
 
-        readFromBin();
+        readFromBin(file);
     }
 };
 

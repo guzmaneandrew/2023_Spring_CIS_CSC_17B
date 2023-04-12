@@ -160,8 +160,8 @@ public:
         }
     }
 
-    void saveToBin() {
-        fstream surveyDB("SurveyInfo.dat", ios::out | ios::binary | ios::app);
+    void saveToBin(string file) {
+        fstream surveyDB(file, ios::out | ios::binary | ios::app);
 
         if (!surveyDB) {
             cerr << "Error: Unable to Open File for Writing." << endl;
@@ -196,8 +196,8 @@ public:
         surveyDB.close();
     }
 
-    void readFromBin() {
-        fstream surveyDB("SurveyInfo.dat", ios::in | ios::binary);
+    void readFromBin(string file) {
+        fstream surveyDB(file, ios::in | ios::binary);
         if (!surveyDB) {
             cerr << "Error: Unable to Open File for Reading." << endl;
             return;

@@ -26,36 +26,42 @@ int main(int argc, char** argv) {
     //Initial Variables
     //Welcome menu
     //Prompt to login/register
-    string username,password;
+    string username, password;
     char login = ' ';
-    
-    cout << "Welcome" << endl;
-    do {
-        char input;
-        cout << "R) To Register \t L) To Log In" << endl;
-        cin >> input;
-        login = input;
-    } while (login != 'R' && login != 'r' && login != 'L' && login != 'l');
 
-    if (login == 'R' || login == 'r') {
-        cout << "REGISTER" << endl;
-        cout << "Enter Username : ";
-        cin >> username;
-        cout << "Enter Password : ";
-        cin >> password;
-    } else if (login == 'L' || login == 'l') {
-        cout << "LOGIN" << endl;
-        cout << "Enter Username : ";
-        cin >> username;
-        cout << "Enter Password : ";
-        cin >> password;
-    }
+//    cout << "Welcome" << endl;
+//    do {
+//        char input;
+//        cout << "R) To Register \t L) To Log In" << endl;
+//        cin >> input;
+//        login = input;
+//    } while (login != 'R' && login != 'r' && login != 'L' && login != 'l');
+//
+//    if (login == 'R' || login == 'r') {
+//        cout << "REGISTER" << endl;
+//        cout << "Enter Username : ";
+//        cin >> username;
+//        cout << "Enter Password : ";
+//        cin >> password;
+//    } else if (login == 'L' || login == 'l') {
+//        cout << "LOGIN" << endl;
+//        cout << "Enter Username : ";
+//        cin >> username;
+//        cout << "Enter Password : ";
+//        cin >> password;
+//    }
+
+    cout << "LOGIN" << endl;
+    cout << "Enter Username : ";
+    cin >> username;
+    cout << "Enter Password : ";
+    cin >> password;
 
     if (false) {
         Admin admin;
     } else {
         User user;
-        user.setUsrInfo(username,password);
+        user.setUsrInfo(username, password);
         user.prompt();
     }
     //If login

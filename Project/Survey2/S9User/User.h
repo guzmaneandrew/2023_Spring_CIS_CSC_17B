@@ -13,6 +13,9 @@
 #ifndef USER_H
 #define USER_H
 
+#include "Survey.h"
+
+
 struct UserInfo {
     char username[10];
     char password[12];
@@ -24,6 +27,7 @@ private:
     vector<Survey *> surveys; //All available surveys
     vector<Survey *> userSrvs; //Surveys completed by user
     vector<string> responses; //User responses to surveys
+    string usrFile;           //name of user file
 public:
 
     User() {
@@ -73,6 +77,7 @@ public:
     void setUsrInfo(string name, string pass) {
         strcpy(info.username, name.c_str());
         strcpy(info.password, pass.c_str());
+        usrFile=info.username;
     }
 
     void updtUsrInfo() {
@@ -83,7 +88,7 @@ public:
     }
 
     void listUsrInfo() {
-        fstream userDB("UserInfo.dat", ios::in | ios::app | ios::binary);
+        fstream userDB(usrFile+".dat", ios::in | ios::app | ios::binary);
         UserInfo temp;
 
         cout << endl << "Username \t Password" << endl << endl;
@@ -121,12 +126,12 @@ public:
         indx = survNum - 1;
 
         cout << "COMPLETE SURVEY" << endl;
+        surveys[indx]->display();
         userSrvs.push_back(surveys[indx]);
-
     }
 
     void listSrvs() {
-        readFromBin();
+        readFromBin("SurveyInfo.dat");
 
         cout << endl << "ALL SURVEYS" << endl;
         if (surveys.size() == 0) {
@@ -144,7 +149,7 @@ public:
 
     void listCompSrvs() {
         //        bool none = true;
-        //        readFromBin();
+//                readFromBin(info.username+".dat");
         //
         //        cout << endl << "COMPLETEDS SURVEYS" << endl;
         //        if (surveys.size() == 0) {
@@ -257,268 +262,62 @@ public:
             }
         } while (choice != 0);
 
-        reloadSrvs();
+        reloadSrvs("SurveyInfo.dat");
     }
 
     void deleteAll() {
-        string confirm1, confirm2;
-        cout << "DANGER ZONE: DELETE ALL SURVEYS" << endl;
-        cout << "This action will permanently delete all surveys in your database.\n";
 
-        do {
-            cout << "Press 'D' to Continue or 'X' to Cancel: ";
-            cin>>confirm1;
-            cin.ignore();
-        } while (confirm1 != "D" && confirm1 != "X");
-
-        do {
-            if (confirm1 == "X" || confirm1 == "x") {
-                break;
-            }
-            cout << endl << "There is no going back. Please be certain." << endl;
-            cout << "To confirm, type 'admin password': ";
-            getline(cin, confirm2);
-
-            if (confirm2 != "admin password") {
-                cout << "Did You Change Your Mind? (Y=yes or N=no): ";
-                cin>>confirm2;
-                cin.ignore();
-                if (confirm2 == "Y" || confirm2 == "y") {
-                    break;
-                } else {
-                    cout << "Try Again." << endl;
-                }
-            }
-        } while (confirm2 != "admin password");
-
-        if (confirm2 == "admin password" && confirm1 == "D") {
-            clearBin();
-            surveys.clear();
-            cout << endl << "All Surveys Have Been Deleted from the Database..." << endl;
-        }
     }
 
     //    Helper Functions
 
     void addSrvQ(Survey *survey) {
-        survey->addQ();
-        survey->display();
+        
     }
 
     void deleteQ(Survey *survey) {
-        int numQ, indx, validNum;
-
-        validNum = survey->getNumQs();
-
-        do {
-            cout << "Enter Number of Question to Delete: ";
-            cin>>numQ;
-            cin.ignore();
-            if (numQ <= 0 || numQ > validNum) {
-                cout << "Invalid Question Number. Enter 1 - " << validNum << endl;
-            }
-        } while (numQ <= 0 || numQ > validNum);
-
-
-        indx = numQ - 1;
-        survey->deleteQ(indx);
-        survey->display();
+   
     }
 
     void updtTitle(Survey *survey) {
-        char newTitle[TSIZE];
-        cout << "Enter the New Title: ";
-        cin.getline(newTitle, TSIZE);
 
-        survey->setTitle(newTitle);
-        survey->display();
     }
 
     void updtStatus(Survey *survey) {
-        survey->setStatus(!survey->getStatus());
-        survey->display();
+      
     }
 
     void updtSrvQs(Survey *survey) {
-        //Get questions vector for specific question
-        vector<Question *> qs = survey->getQs();
-        int validIndx = qs.size();
-        int numQ, indx, choice;
 
-        do {
-            cout << "Enter Number of Question To Update: ";
-            cin>>numQ;
-            cin.ignore();
-            if (numQ <= 0 || numQ > validIndx) {
-                cout << "Invalid Question Number. Enter 1 - " << validIndx << "." << endl;
-            }
-        } while (numQ < 0 || numQ > validIndx);
-
-        indx = numQ - 1;
-        cout << endl << "Question: ";
-        qs[indx]->display(); //Print question for viewing
-
-        do {
-            cout << "Enter What You Would Like to Update" << endl;
-            cout << " 1) Question" << endl;
-            cout << " 2) Question Type" << endl;
-            cout << " 3) Response Options" << endl;
-            cout << " 0) Cancel Question/Response Options Updates" << endl;
-            cin>>choice;
-            cin.ignore();
-
-            switch (choice) {
-                case 1:
-                    cout << endl << "UPDATE QUESTION" << endl;
-                    updtQ(survey->getQ(numQ));
-                    break;
-                case 2:
-                    cout << endl << "UPDATE QUESTION TYPE" << endl;
-                    updtQType(survey->getQ(numQ));
-                    break;
-                case 3:
-                    cout << endl << "UPDATE RESPONSE OPTIONS" << endl;
-                    updtROpts(survey->getQ(numQ));
-                    break;
-                case 0:
-                    cout << endl << "CANCEL QUESTION/RESPONSE OPTION UPDATES" << endl;
-                    break;
-                default:
-                    cout << endl << "You picked an invalid option" << endl;
-                    break;
-            }
-        } while (choice != 0);
-
-        survey->display();
-
-        reloadSrvs();
     }
 
     void updtQ(Question *q) {
-        char newQ[QRSIZE];
-
-        cout << "Enter New Question: ";
-        cin.getline(newQ, QRSIZE);
-        q->setQ(newQ);
-
-        cout << endl << "Question: ";
-        q->display();
+       
     }
 
     void updtQType(Question *q) {
-        int type;
-
-        cout << "Enter Question Type (1=Single, 2=Multiple, 3=Write-In): ";
-        cin>>type;
-        cin.ignore();
-        q->setType(type);
-
-        cout << endl << "Question: ";
-        q->display();
+      
     }
 
     void updtROpts(Question *q) {
-        vector<string> qResp = q->getRespOptions();
-
-        int choice;
-
-        //Display response options
-        cout << "Response Options" << endl;
-        for (int i = 0; i < qResp.size(); i++) {
-            cout << i + 1 << ") " << qResp[i] << endl;
-        }
-        cout << endl;
-
-        do {
-            cout << "Enter What You Would Like to Update" << endl;
-            cout << " 1) Update Response Option" << endl;
-            cout << " 2) Add Response Option" << endl;
-            cout << " 3) Delete Response Option" << endl;
-            cout << " 0) Cancel Response Option Updates" << endl;
-            cin>>choice;
-            cin.ignore();
-
-            switch (choice) {
-                case 1:
-                    cout << endl << "UPDATE RESPONSE OPTION" << endl;
-                    updtROPt(q);
-                    break;
-                case 2:
-                    cout << endl << "ADD RESPONSE OPTION" << endl;
-                    addROpt(q);
-                    break;
-                case 3:
-                    cout << endl << "DELETE RESPONSE OPTION" << endl;
-                    deleteROpt(q);
-                    break;
-                case 0:
-                    cout << endl << "CANCEL RESPONSE OPTION UPDATES" << endl;
-                    break;
-                default:
-                    cout << endl << "You picked an invalid option" << endl;
-                    break;
-            }
-        } while (choice != 0);
-
-        cout << endl << "Question: ";
-        q->display();
-
-        reloadSrvs();
+   
     }
 
     void updtROPt(Question *q) {
-        int validIndx = q->getNumResp();
-        string response;
 
-        int numR, indx;
-
-        do {
-            cout << "Enter the Number of the Response To Update: ";
-            cin>>numR;
-            cin.ignore();
-            if (numR <= 0 || numR > validIndx) {
-                cout << "Invalid Response Number. Enter 1 - " << validIndx << "." << endl;
-            }
-        } while (numR < 0 || numR > validIndx);
-
-        indx = numR - 1;
-        q->setResp(indx);
-
-        cout << endl << "Question: ";
-        q->display();
     }
 
     void addROpt(Question *q) {
-        q->addResp();
-
-        cout << endl << "Question: ";
-        q->display();
+   
     }
 
     void deleteROpt(Question *q) {
-        int numR, indx, validNum;
 
-        validNum = q->getNumResp();
-
-        do {
-            cout << "Enter Response to Delete: ";
-            cin>>numR;
-            cin.ignore();
-            if (numR <= 0 || numR > validNum) {
-                cout << "Invalid Response Number. Enter 1 - " << validNum << endl;
-            }
-        } while (numR <= 0 || numR > validNum);
-
-        indx = numR - 1;
-        q->deleteROpt(indx);
-
-        cout << endl << "Question: ";
-        q->display();
     }
 
-    void readFromBin() {
+    void readFromBin(string file) {
         surveys.clear(); //Clear vector first to read entire file contents to it
-        fstream surveyDB("SurveyInfo.dat", ios::in | ios::binary);
+        fstream surveyDB(file, ios::in | ios::binary);
         if (!surveyDB) {
             cerr << "ERROR: Unable to Open File for Reading." << endl;
             return;
@@ -579,21 +378,21 @@ public:
         surveyDB.close();
     }
 
-    void clearBin() {
+    void clearBin(string file) {
         //Deletes all contents of the binary file
-        ofstream surveyDB("SurveyInfo.dat", ios::out | ios::trunc);
+        ofstream surveyDB(file, ios::out | ios::trunc);
         surveyDB.close();
     }
 
-    void reloadSrvs() {
+    void reloadSrvs(string file) {
         //Clear binary file, output vector surveys to binary, then write to bin
-        clearBin();
+        clearBin(file);
 
         for (int i = 0; i < surveys.size(); i++) {
-            surveys[i]->saveToBin();
+            surveys[i]->saveToBin(file);
         }
 
-        readFromBin();
+        readFromBin(file);
     }
 };
 
