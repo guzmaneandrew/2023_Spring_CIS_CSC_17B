@@ -15,7 +15,6 @@
 
 #include "Survey.h"
 
-
 struct UserInfo {
     char username[10];
     char password[12];
@@ -27,7 +26,7 @@ private:
     vector<Survey *> surveys; //All available surveys
     vector<Survey *> userSrvs; //Surveys completed by user
     vector<string> responses; //User responses to surveys
-    string usrFile;           //name of user file
+    string usrFile; //name of user file
 public:
 
     User() {
@@ -42,8 +41,8 @@ public:
             cout << " 1) IP Complete Survey" << endl;
             cout << " 2) List Available Surveys" << endl;
             cout << " 3) List Completed Surveys" << endl;
-            cout << " 4) " << endl;
-            cout << " 5) View a Survey" << endl;
+            cout << " 4) View an Available Survey" << endl;
+            cout << " 5) View a Completed Survey" << endl;
             cout << " 6) " << endl;
             cout << " 7) View Account Information" << endl;
             cout << " 8) " << endl;
@@ -52,17 +51,17 @@ public:
             cin>>choice;
             cin.ignore();
             if (choice == 1) {
-                completeSrv();
+                completeSrv(usrFile + "Surveys.dat");
             } else if (choice == 2) {
-                listSrvs();
+                listSrvs("SurveyInfo.dat");
             } else if (choice == 3) {
-                listCompSrvs();
+                listCompSrvs(usrFile + "Surveys.dat");
             } else if (choice == 4) {
-
+                prntSrvs("SurveyInfo.dat",surveys);
             } else if (choice == 5) {
-                prntSrv();
+                prntSrvs(usrFile + "Surveys.dat",userSrvs);
             } else if (choice == 6) {
-                updtSrv();
+                
             } else if (choice == 7) {
                 updtUsrInfo();
             } else if (choice == 8) {
@@ -77,7 +76,34 @@ public:
     void setUsrInfo(string name, string pass) {
         strcpy(info.username, name.c_str());
         strcpy(info.password, pass.c_str());
-        usrFile=info.username;
+        usrFile = info.username;
+    }
+
+    void completeSrv(string file) {
+        cout << "COMPLETE SURVEY" << endl;
+        int survNum, indx, validNum;
+
+        //List all surveys
+        listSrvs("SurveyInfo.dat");
+        validNum = surveys.size();
+
+        //Prompt to select a survey to complete if there are surveys to complete
+        if (surveys.size() != 0) {
+            do {
+                cout << "Enter the Number of the Survey to Complete: ";
+                cin>>survNum;
+                cin.ignore();
+                if (survNum <= 0 || survNum > validNum) {
+                    cout << "Invalid Survey Number. Enter 1 - " << validNum << endl;
+                }
+            } while (survNum <= 0 || survNum > validNum);
+
+            indx = survNum - 1;
+            cout << "COMPLETE SURVEY" << endl;
+            userSrvs.push_back(surveys[indx]);
+            surveys[indx]->saveToBin(file);
+            surveys[indx]->display();
+        }
     }
 
     void updtUsrInfo() {
@@ -88,7 +114,7 @@ public:
     }
 
     void listUsrInfo() {
-        fstream userDB(usrFile+".dat", ios::in | ios::app | ios::binary);
+        fstream userDB(usrFile + ".dat", ios::in | ios::app | ios::binary);
         UserInfo temp;
 
         cout << endl << "Username \t Password" << endl << endl;
@@ -104,36 +130,10 @@ public:
         userDB.close();
     }
 
-    void completeSrv() {
-        cout << "COMPLETE SURVEY" << endl;
-        int survNum, indx, validNum;
+    void listSrvs(string file) {
+        readFromBin(file);
 
-        //List all surveys
-        listSrvs();
-
-        validNum = surveys.size();
-
-        //Indicate which survey to view
-        do {
-            cout << "Enter the Number of the Survey to Complete: ";
-            cin>>survNum;
-            cin.ignore();
-            if (survNum <= 0 || survNum > validNum) {
-                cout << "Invalid Survey Number. Enter 1 - " << validNum << endl;
-            }
-        } while (survNum <= 0 || survNum > validNum);
-
-        indx = survNum - 1;
-
-        cout << "COMPLETE SURVEY" << endl;
-        surveys[indx]->display();
-        userSrvs.push_back(surveys[indx]);
-    }
-
-    void listSrvs() {
-        readFromBin("SurveyInfo.dat");
-
-        cout << endl << "ALL SURVEYS" << endl;
+        cout << endl << "AVAILABLE SURVEYS" << endl;
         if (surveys.size() == 0) {
             cout << "No Surveys To Retrieve from the Database." << endl;
         } else {
@@ -147,122 +147,53 @@ public:
         cout << endl;
     }
 
-    void listCompSrvs() {
-        //        bool none = true;
-//                readFromBin(info.username+".dat");
-        //
-        //        cout << endl << "COMPLETEDS SURVEYS" << endl;
-        //        if (surveys.size() == 0) {
-        //            cout << "No Surveys To Retrieve from the Database." << endl;
-        //        } else {
-        //            cout << left;
-        //            cout << setw(50) << "Title" << right << setw(12) << "Active" << endl;
-        //            for (int i = 0; i < surveys.size(); i++) {
-        //                if (surveys[i]->getStatus() == true) {
-        //                    cout << i + 1 << ") ";
-        //                    cout << left << setw(50) << surveys[i]->getTitle() << "\t"
-        //                            << boolalpha << surveys[i]->getStatus() << endl;
-        //                    none = false;
-        //                }
-        //            }
-        //            if (none == true) {
-        //                cout << right << setw(15) << "- - - - - - None - - - - - -" << endl;
-        //            }
-        //        }
+    void listCompSrvs(string file) {
+        bool none = true;
+        readFromBin(file);
+
+        cout << endl << "COMPLETEDS SURVEYS" << endl;
+        if (surveys.size() == 0) {
+            cout << "No Surveys To Retrieve from the Database." << endl;
+        } else {
+            cout << left;
+            cout << setw(50) << "Title" << right << setw(12) << "Active" << endl;
+            for (int i = 0; i < surveys.size(); i++) {
+                if (surveys[i]->getStatus() == true) {
+                    cout << i + 1 << ") ";
+                    cout << left << setw(50) << surveys[i]->getTitle() << "\t"
+                            << boolalpha << surveys[i]->getStatus() << endl;
+                    none = false;
+                }
+            }
+            if (none == true) {
+                cout << right << setw(15) << "- - - - - - None - - - - - -" << endl;
+            }
+        }
     }
 
-    void prntSrv() {
+    void prntSrvs(string file,vector<Survey *> srvs) {
         int survNum, indx, validNum;
 
         //List all surveys
-        listSrvs();
+        listSrvs(file);
+        validNum = srvs.size();
 
-        validNum = surveys.size();
+        if(srvs.size() != 0) {
+            //Indicate which survey to view
+            do {
+                cout << "Enter the Number of the Survey to View: ";
+                cin>>survNum;
+                cin.ignore();
+                if (survNum <= 0 || survNum > validNum) {
+                    cout << "Invalid Survey Number. Enter 1 - " << validNum << endl;
+                }
+            } while (survNum <= 0 || survNum > validNum);
 
-        //Indicate which survey to view
-        do {
-            cout << "Enter the Number of the Survey to View: ";
-            cin>>survNum;
-            cin.ignore();
-            if (survNum <= 0 || survNum > validNum) {
-                cout << "Invalid Survey Number. Enter 1 - " << validNum << endl;
-            }
-        } while (survNum <= 0 || survNum > validNum);
+            indx = survNum - 1;
 
-        indx = survNum - 1;
-
-        cout << "VIEW SURVEY" << endl;
-        surveys[indx]->display();
-    }
-
-    void updtSrv() {
-        Survey *surv2updt;
-        int survNum, indx, choice, validNum;
-
-        validNum = surveys.size();
-
-        cout << endl << "UPDATE SURVEY" << endl;
-
-        //List all surveys
-        listSrvs();
-
-        //Indicate which to delete
-        do {
-            cout << "Enter Number of Survey to Update: ";
-            cin>>survNum;
-            cin.ignore();
-            if (survNum <= 0 || survNum > validNum) {
-                cout << "Invalid Survey Number. Enter 1 - " << validNum << "." << endl;
-            }
-        } while (survNum <= 0 || survNum > validNum);
-
-
-        indx = survNum - 1;
-        surv2updt = surveys[indx];
-        surveys[indx]->display();
-
-        do {
-            cout << "Enter What You Would Like to Update" << endl;
-            cout << " 1) Title" << endl;
-            cout << " 2) Status" << endl;
-            cout << " 3) Questions/Responses Options" << endl;
-            cout << " 4) Add Question" << endl;
-            cout << " 5) Delete Question" << endl;
-            cout << " 0) Cancel Survey Updates " << endl;
-
-            cin>>choice;
-            cin.ignore();
-            switch (choice) {
-                case 1:
-                    cout << endl << "UPDATE TITLE" << endl;
-                    updtTitle(surv2updt);
-                    break;
-                case 2:
-                    cout << endl << "UPDATE STATUS" << endl;
-                    updtStatus(surv2updt);
-                    break;
-                case 3:
-                    cout << endl << "UPDATE QUESTIONS" << endl;
-                    updtSrvQs(surv2updt);
-                    break;
-                case 4:
-                    cout << endl << "ADD QUESTION" << endl;
-                    addSrvQ(surv2updt);
-                    break;
-                case 5:
-                    cout << endl << "DELETE QUESTION" << endl;
-                    deleteQ(surv2updt);
-                    break;
-                case 0:
-                    cout << endl << "CANCEL SURVEY UPDATES" << endl;
-                    break;
-                default:
-                    cout << endl << "You picked an invalid option" << endl;
-                    break;
-            }
-        } while (choice != 0);
-
-        reloadSrvs("SurveyInfo.dat");
+            cout << "VIEW SURVEY" << endl;
+            surveys[indx]->display();      
+        }
     }
 
     void deleteAll() {
@@ -270,50 +201,6 @@ public:
     }
 
     //    Helper Functions
-
-    void addSrvQ(Survey *survey) {
-        
-    }
-
-    void deleteQ(Survey *survey) {
-   
-    }
-
-    void updtTitle(Survey *survey) {
-
-    }
-
-    void updtStatus(Survey *survey) {
-      
-    }
-
-    void updtSrvQs(Survey *survey) {
-
-    }
-
-    void updtQ(Question *q) {
-       
-    }
-
-    void updtQType(Question *q) {
-      
-    }
-
-    void updtROpts(Question *q) {
-   
-    }
-
-    void updtROPt(Question *q) {
-
-    }
-
-    void addROpt(Question *q) {
-   
-    }
-
-    void deleteROpt(Question *q) {
-
-    }
 
     void readFromBin(string file) {
         surveys.clear(); //Clear vector first to read entire file contents to it

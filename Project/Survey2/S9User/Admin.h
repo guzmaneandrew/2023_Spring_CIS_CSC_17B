@@ -80,6 +80,7 @@ public:
         adminDB.seekp(ios::app);
         adminDB.write(reinterpret_cast<char *> (&newAdmin), sizeof (newAdmin));
         adminDB.close();
+        listAdmins();
     }
     
     void listAdmins() {
@@ -129,7 +130,6 @@ public:
                         << boolalpha << surveys[i]->getStatus() << endl;
             }
         }
-        cout << endl;
     }
 
     void listActvSrv() {
@@ -182,10 +182,12 @@ public:
     void prntSrv() {
         int survNum, indx, validNum;
 
+        validNum = surveys.size();
+        
+        cout << endl << "VIEW SURVEY" << endl;
+
         //List all surveys
         listAllSrv();
-
-        validNum = surveys.size();
 
         if(surveys.size() != 0) {
             //Indicate which survey to view
@@ -211,69 +213,71 @@ public:
         int survNum, indx, choice, validNum;
 
         validNum = surveys.size();
-
+        
         cout << endl << "UPDATE SURVEY" << endl;
 
         //List all surveys
         listAllSrv();
 
-        //Indicate which to delete
-        do {
-            cout << "Enter Number of Survey to Update: ";
-            cin>>survNum;
-            cin.ignore();
-            if (survNum <= 0 || survNum > validNum) {
-                cout << "Invalid Survey Number. Enter 1 - " << validNum << "." << endl;
-            }
-        } while (survNum <= 0 || survNum > validNum);
+        if(surveys.size() != 0) {
+            //Indicate which to delete
+            do {
+                cout << "Enter Number of Survey to Update: ";
+                cin>>survNum;
+                cin.ignore();
+                if (survNum <= 0 || survNum > validNum) {
+                    cout << "Invalid Survey Number. Enter 1 - " << validNum << "." << endl;
+                }
+            } while (survNum <= 0 || survNum > validNum);
 
 
-        indx = survNum - 1;
-        surv2updt = surveys[indx];
-        surveys[indx]->display();
+            indx = survNum - 1;
+            surv2updt = surveys[indx];
+            surveys[indx]->display();
 
-        do {
-            cout << "Enter What You Would Like to Update" << endl;
-            cout << " 1) Title" << endl;
-            cout << " 2) Status" << endl;
-            cout << " 3) Questions/Responses Options" << endl;
-            cout << " 4) Add Question" << endl;
-            cout << " 5) Delete Question" << endl;
-            cout << " 0) Cancel Survey Updates " << endl;
+            do {
+                cout << "Enter What You Would Like to Update for This Survey" << endl;
+                cout << " 1) Title" << endl;
+                cout << " 2) Status" << endl;
+                cout << " 3) Questions/Responses Options" << endl;
+                cout << " 4) Add Question" << endl;
+                cout << " 5) Delete Question" << endl;
+                cout << " 0) Cancel Survey Updates " << endl;
 
-            cin>>choice;
-            cin.ignore();
-            switch (choice) {
-                case 1:
-                    cout << endl << "UPDATE TITLE" << endl;
-                    updtTitle(surv2updt);
-                    break;
-                case 2:
-                    cout << endl << "UPDATE STATUS" << endl;
-                    updtStatus(surv2updt);
-                    break;
-                case 3:
-                    cout << endl << "UPDATE QUESTIONS" << endl;
-                    updtSrvQs(surv2updt);
-                    break;
-                case 4:
-                    cout << endl << "ADD QUESTION" << endl;
-                    addSrvQ(surv2updt);
-                    break;
-                case 5:
-                    cout << endl << "DELETE QUESTION" << endl;
-                    deleteQ(surv2updt);
-                    break;
-                case 0:
-                    cout << endl << "CANCEL SURVEY UPDATES" << endl;
-                    break;
-                default:
-                    cout << endl << "You picked an invalid option" << endl;
-                    break;
-            }
-        } while (choice != 0);
+                cin>>choice;
+                cin.ignore();
+                switch (choice) {
+                    case 1:
+                        cout << endl << "UPDATE TITLE" << endl;
+                        updtTitle(surv2updt);
+                        break;
+                    case 2:
+                        cout << endl << "UPDATE STATUS" << endl;
+                        updtStatus(surv2updt);
+                        break;
+                    case 3:
+                        cout << endl << "UPDATE QUESTIONS" << endl;
+                        updtSrvQs(surv2updt);
+                        break;
+                    case 4:
+                        cout << endl << "ADD QUESTION" << endl;
+                        addSrvQ(surv2updt);
+                        break;
+                    case 5:
+                        cout << endl << "DELETE QUESTION" << endl;
+                        deleteQ(surv2updt);
+                        break;
+                    case 0:
+                        cout << endl << "CANCEL SURVEY UPDATES" << endl;
+                        break;
+                    default:
+                        cout << endl << "You picked an invalid option" << endl;
+                        break;
+                }
+            } while (choice != 0);
 
-        reloadSrvs("SurveyInfo.dat");
+            reloadSrvs("SurveyInfo.dat");          
+        }  
     }
 
     void deleteAll() {
