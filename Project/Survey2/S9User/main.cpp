@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     cout << "Enter Password : ";
     cin >> password;
 
-    if (false) {
+    if (true) {
         Admin admin;
     } else {
         User user;

@@ -81,7 +81,7 @@ public:
 
     void completeSrv(string file) {
         int survNum, indx, validNum;
-        bool completed = false;
+        bool completed = false; //flag to indicate whether survey is completed
 
         //List all surveys
         listSrvs("SurveyInfo.dat");
@@ -89,7 +89,7 @@ public:
 
         //Prompt to select a survey to complete if there are surveys to complete
         if (surveys.size() != 0) {
-            validNum = surveys.size();  //Check input is within bounds
+            validNum = surveys.size(); //Check input is within bounds
             do {
                 cout << "Enter the Number of the Survey to Complete: ";
                 cin>>survNum;
@@ -106,20 +106,19 @@ public:
             //Check that the selected survey hasn't already been completed
             if (userSrvs.size() != 0) {
                 for (int i = 0; i < userSrvs.size(); i++) {
-                    cout << surveys[indx]->getTitle() << endl;
-                    cout << userSrvs[i]->getTitle() << endl;
                     if (strcmp(surveys[indx]->getTitle(), userSrvs[i]->getTitle()) == 0) {
                         completed = true;
                     }
                 }
-                //            
-                //            if(completed==false) {
-                //                userSrvs.push_back(surveys[indx]);
-                //                surveys[indx]->saveToBin(file);
-                //                surveys[indx]->display(); 
-                //            } else {
-                //                cout<<"You've Already Completed this Survey."<<endl;
-                //            }   
+
+                //If not completed, add survey to completed surveys and save to bin
+                if (completed == false) {
+                    userSrvs.push_back(surveys[indx]);
+                    surveys[indx]->saveToBin(file);
+                    surveys[indx]->display();
+                } else {
+                    cout << "You've Already Completed This Survey." << endl;
+                }
             }
 
 
@@ -161,10 +160,22 @@ public:
             cout << setw(50) << "Title" << right << setw(12) << "Completed" << endl;
             for (int i = 0; i < surveys.size(); i++) {
                 cout << i + 1 << ") ";
-                cout << left << setw(50) << surveys[i]->getTitle() << endl;
+                cout << left << setw(50) << surveys[i]->getTitle() << "\t"
+                        << boolalpha << chkComplete(surveys[i]) << endl;
             }
         }
         cout << endl;
+    }
+
+    bool chkComplete(Survey *srv) {
+        bool complete;
+
+        for (int i = 0; i < userSrvs.size(); i++) {
+            if (strcmp(srv->getTitle(), userSrvs[i]->getTitle()) == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     void listCompSrvs(string file) {
@@ -193,17 +204,17 @@ public:
     void prntSrvs(string file, vector<Survey *>& srvs) {
         int survNum, indx, validNum;
 
-        //Ensure input for survey is within bounds
-        validNum = srvs.size();
-        
         //Read surveys from binary file
         //List surveys depending which files we're passed
+        //Ensure input for survey is within bounds
         if (file == "SurveyInfo.dat") {
             readFromBin(file, surveys);
             listSrvs(file);
+            validNum = surveys.size();
         } else {
             readFromBin(file, userSrvs);
             listCompSrvs(file);
+            validNum = userSrvs.size();
         }
 
         if (srvs.size() != 0) {
