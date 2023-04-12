@@ -81,16 +81,15 @@ public:
 
     void completeSrv(string file) {
         int survNum, indx, validNum;
-        bool completed=false;
+        bool completed = false;
 
-        validNum = userSrvs.size();
-        
         //List all surveys
         listSrvs("SurveyInfo.dat");
-        readFromBin(file,userSrvs);
+        readFromBin(file, userSrvs);
 
         //Prompt to select a survey to complete if there are surveys to complete
         if (surveys.size() != 0) {
+            validNum = surveys.size();  //Check input is within bounds
             do {
                 cout << "Enter the Number of the Survey to Complete: ";
                 cin>>survNum;
@@ -105,7 +104,7 @@ public:
             indx = survNum - 1;
 
             //Check that the selected survey hasn't already been completed
-            if(userSrvs.size()!=0 ) {
+            if (userSrvs.size() != 0) {
                 for (int i = 0; i < userSrvs.size(); i++) {
                     cout << surveys[indx]->getTitle() << endl;
                     cout << userSrvs[i]->getTitle() << endl;
@@ -122,7 +121,7 @@ public:
                 //                cout<<"You've Already Completed this Survey."<<endl;
                 //            }   
             }
- 
+
 
         }
     }
@@ -152,11 +151,7 @@ public:
     }
 
     void listSrvs(string file) {
-        cout<<file<<": HERE"<<endl;
-        readFromBin(file,surveys);
-        for(int i=0;i<surveys.size();i++) {
-            surveys[i]->display();
-        }
+        readFromBin(file, surveys);
 
         cout << endl << "AVAILABLE SURVEYS" << endl;
         if (surveys.size() == 0) {
@@ -174,19 +169,18 @@ public:
 
     void listCompSrvs(string file) {
         bool none = true;
-        readFromBin(file,userSrvs);
+        readFromBin(file, userSrvs);
 
         cout << endl << "COMPLETEDS SURVEYS" << endl;
         if (userSrvs.size() == 0) {
             cout << "No Surveys To Retrieve from the Database." << endl;
         } else {
             cout << left;
-            cout << setw(50) << "Title" << right << setw(12) << "Active" << endl;
+            cout << setw(50) << "Title" << endl;
             for (int i = 0; i < userSrvs.size(); i++) {
                 if (userSrvs[i]->getStatus() == true) {
                     cout << i + 1 << ") ";
-                    cout << left << setw(50) << userSrvs[i]->getTitle() << "\t"
-                            << boolalpha << userSrvs[i]->getStatus() << endl;
+                    cout << left << setw(50) << userSrvs[i]->getTitle() << endl;
                     none = false;
                 }
             }
@@ -196,12 +190,21 @@ public:
         }
     }
 
-    void prntSrvs(string file, vector<Survey *> srvs) {
+    void prntSrvs(string file, vector<Survey *>& srvs) {
         int survNum, indx, validNum;
 
-        //List all surveys
-        listSrvs(file);
+        //Ensure input for survey is within bounds
         validNum = srvs.size();
+        
+        //Read surveys from binary file
+        //List surveys depending which files we're passed
+        if (file == "SurveyInfo.dat") {
+            readFromBin(file, surveys);
+            listSrvs(file);
+        } else {
+            readFromBin(file, userSrvs);
+            listCompSrvs(file);
+        }
 
         if (srvs.size() != 0) {
             //Indicate which survey to view
@@ -215,7 +218,6 @@ public:
             } while (survNum <= 0 || survNum > validNum);
 
             indx = survNum - 1;
-
             cout << "VIEW SURVEY" << endl;
             srvs[indx]->display();
         }
@@ -227,7 +229,7 @@ public:
 
     //    Helper Functions
 
-    void readFromBin(string file,vector<Survey *>& srvs) {
+    void readFromBin(string file, vector<Survey *>& srvs) {
         srvs.clear(); //Clear vector first to read entire file contents to it
         fstream surveyDB(file, ios::in | ios::binary);
         if (!surveyDB) {
@@ -304,7 +306,7 @@ public:
             srvs[i]->saveToBin(file);
         }
 
-        readFromBin(file,srvs);
+        readFromBin(file, srvs);
     }
 };
 

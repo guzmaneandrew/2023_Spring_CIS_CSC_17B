@@ -43,7 +43,7 @@ public:
     void newSurvQ() {
         //Receive input for new survey Question
         char q[QRSIZE];
-        int type, numResp;
+        int type, numResp,writeInIndx;
         vector<string> responses;
 
         cout << "Enter Question: ";
@@ -56,11 +56,20 @@ public:
         cin >> numResp;
         cin.ignore();
 
+        //If write-in Q, don't prompt to enter a response for last option
+        if(type==3) {
+            writeInIndx=numResp-1;
+        }
+        
         for (int i = 0; i < numResp; i++) {
             string response;
             cout << "Enter Response Option " << i + 1 << ": ";
             getline(cin, response);
             responses.push_back(response);
+            
+            if(type==3 && i==writeInIndx) {
+                cout<<"Write-In Response Option: "<<endl;
+            }
         }
 
         //Create new Question object

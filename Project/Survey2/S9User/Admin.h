@@ -182,6 +182,8 @@ public:
     void prntSrv() {
         int survNum, indx, validNum;
 
+        //Reload surveys from binary file
+        readFromBin("SurveyInfo.dat");
         validNum = surveys.size();
         
         cout << endl << "VIEW SURVEY" << endl;
