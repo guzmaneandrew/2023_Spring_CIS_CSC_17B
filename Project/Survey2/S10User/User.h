@@ -59,7 +59,7 @@ public:
             } else if (choice == 4) {
                 prntSrvs("SurveyInfo.dat", surveys);
             } else if (choice == 5) {
-                prntSrvs(usrFile + "Surveys.dat", userSrvs);
+                prntUsrSrvs();
             } else if (choice == 6) {
                 viewResp();
             } else if (choice == 7) {
@@ -74,11 +74,11 @@ public:
     }
 
     void viewResp() {
-        for(int i=0;i<responses.size();i++) {
-            cout<<responses[i]<<endl;
+        for (int i = 0; i < responses.size(); i++) {
+            cout << responses[i] << endl;
         }
     }
-    
+
     void setUsrInfo(string name, string pass) {
         strcpy(info.username, name.c_str());
         strcpy(info.password, pass.c_str());
@@ -92,6 +92,8 @@ public:
         //List all surveys
         listSrvs("SurveyInfo.dat");
         readFromBin(file, userSrvs);
+        readResp();
+        cout << "Responses vec" << responses.size() << endl;
 
         //Prompt to select a survey to complete if there are surveys to complete
         if (surveys.size() != 0) {
@@ -126,6 +128,7 @@ public:
                     }
                     surveys[indx]->saveToBin(file);
                     userSrvs.push_back(surveys[indx]);
+                    reloadResp();
                 } else {
                     cout << "You've Already Completed This Survey." << endl;
                 }
@@ -197,13 +200,13 @@ public:
         bool validInput = true;
         int sizeList;
 
-        cout<<"To Enter a Write-In Response, Include the Last Number Below \n";
+        cout << "To Enter a Write-In Response, Include the Last Number Below \n";
         cout << "Enter Multiple Responses for Question " << i + 1 << "(separated by commas): ";
         getline(cin, usrResps);
 
         // Split the input and store into a vector of strings
         listResp = strSplit(usrResps);
-        sizeList=listResp.size();
+        sizeList = listResp.size();
 
         // Validate that each response is a valid option
         for (int i = 0; i < sizeList; i++) {
@@ -227,7 +230,7 @@ public:
         } else {
             cout << "Invalid Input. Enter 1 - " << q->getNumResp() << endl;
             wrtInResp(i, q);
-        }   
+        }
     }
 
     vector<string> strSplit(string s) {
@@ -247,7 +250,9 @@ public:
 
         clearBin(usrFile + "Surveys.dat");
         userSrvs.clear();
-        cout << endl << "All Surveys Have Been Deleted from the Database..." << endl;
+        clearBin(usrFile + "Resp.dat");
+        responses.clear();
+        cout << endl << "All Surveys and Responses Have Been Deleted from the Database..." << endl;
     }
 
     void updtUsrInfo() {
@@ -332,7 +337,6 @@ public:
 
         //Read surveys from binary file
         //List surveys depending which files we're passed
-        //Ensure input for survey is within bounds
         if (file == "SurveyInfo.dat") {
             readFromBin(file, surveys);
             listSrvs(file);
@@ -343,7 +347,7 @@ public:
             validNum = userSrvs.size();
         }
 
-        if (srvs.size() != 0) {
+        if (srvs.size() != 0) { //Ensure input for survey is within bounds
             //Indicate which survey to view
             do {
                 cout << "Enter the Number of the Survey to View: ";
@@ -360,7 +364,94 @@ public:
         }
     }
 
+    void prntUsrSrvs() {
+        int survNum, indx, validNum;
+
+        //Read surveys and responses from binary file
+        readFromBin(usrFile + "Surveys.dat", userSrvs);
+        listCompSrvs(usrFile + "Surveys.dat");
+        readResp();
+        validNum = userSrvs.size();
+
+        if (userSrvs.size() != 0) { //Ensure input for survey is within bounds
+            //Indicate which survey to view
+            do {
+                cout << "Enter the Number of the Survey to View: ";
+                cin>>survNum;
+                cin.ignore();
+                if (survNum <= 0 || survNum > validNum) {
+                    cout << "Invalid Survey Number. Enter 1 - " << validNum << endl;
+                }
+            } while (survNum <= 0 || survNum > validNum);
+
+            indx = survNum - 1;
+            cout << "VIEW COMPLETED SURVEY" << endl;
+            userSrvs[indx]->display();
+            prntResp(userSrvs[indx]);
+        }
+    }
+
+    void prntResp(Survey *srv) {
+        cout << "Your Responses" << endl;
+        cout << responses.size() << endl;
+    }
+
     //    Helper Functions
+
+    void saveResp2Bin() {
+        fstream respDB(usrFile + "Resp.dat", ios::out | ios::binary | ios::app);
+
+        if (!respDB) {
+            cerr << "Error: Unable to Open File for Writing." << endl;
+            return;
+        }
+        for (int i = 0; i < responses.size(); i++) {
+            int len = responses[i].length();
+            respDB.write(reinterpret_cast<char *> (&len), sizeof (int));
+            respDB.write(responses[i].c_str(), len);
+        }
+        respDB.close();
+    }
+
+    void readResp() {
+        responses.clear(); //Clear vector first to read entire file contents to it
+        fstream respDB(usrFile + "Resp.dat", ios::in | ios::binary);
+        if (!respDB) {
+            return;
+        }
+
+        //Use cursor to get size of file to read entire file
+        respDB.seekg(0, ios::end);
+        int size = respDB.tellg();
+        respDB.seekg(0, ios::beg);
+
+        //Read in responses until cursor reaches the size of the file
+        while (respDB.tellg() < size) {
+            int len;
+            string response;
+            if (!respDB.read(reinterpret_cast<char*> (&len), sizeof (int))) {
+                cerr << "Error: Unable to read response length." << endl;
+                break;
+            }
+            response.resize(len);
+            if (!respDB.read(&response[0], len)) {
+                cerr << "Error: Unable to read response." << endl;
+                break;
+            }
+            cout << response << endl;
+            responses.push_back(response);
+        }
+        respDB.close();
+    }
+
+    void reloadResp() {
+        //Clear binary file, output vector surveys to binary, then write to bin
+        clearBin(usrFile + "Resp.dat");
+
+        saveResp2Bin();
+
+        readResp();
+    }
 
     void readFromBin(string file, vector<Survey *>& srvs) {
         srvs.clear(); //Clear vector first to read entire file contents to it
@@ -427,8 +518,8 @@ public:
 
     void clearBin(string file) {
         //Deletes all contents of the binary file
-        ofstream surveyDB(file, ios::out | ios::trunc);
-        surveyDB.close();
+        ofstream DB(file, ios::out | ios::trunc);
+        DB.close();
     }
 
     void reloadSrvs(string file, vector<Survey *> srvs) {
