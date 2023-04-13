@@ -38,7 +38,7 @@ public:
             cout << " 7) Add Admin" << endl;
             cout << " 8) List Admins" << endl;
             cout << "99) Delete All Surveys" << endl;
-            cout << "-1 ) Logout" << endl;
+            cout << "-1) Logout" << endl;
             cin>>choice;
             cin.ignore();
             if (choice == 1) {
@@ -181,16 +181,13 @@ public:
 
     void prntSrv() {
         int survNum, indx, validNum;
-
-        //Reload surveys from binary file
-        readFromBin("SurveyInfo.dat");
-        validNum = surveys.size();
         
         cout << endl << "VIEW SURVEY" << endl;
 
-        //List all surveys
+        //List all surveys (also reloads surveys from binary file)
         listAllSrv();
-
+        validNum = surveys.size();
+        
         if(surveys.size() != 0) {
             //Indicate which survey to view
             do {
@@ -214,13 +211,12 @@ public:
         Survey *surv2updt;
         int survNum, indx, choice, validNum;
 
-        validNum = surveys.size();
-        
         cout << endl << "UPDATE SURVEY" << endl;
 
         //List all surveys
         listAllSrv();
-
+        validNum = surveys.size();
+        
         if(surveys.size() != 0) {
             //Indicate which to delete
             do {
@@ -239,33 +235,28 @@ public:
 
             do {
                 cout << "Enter What You Would Like to Update for This Survey" << endl;
-                cout << " 1) Title" << endl;
-                cout << " 2) Status" << endl;
-                cout << " 3) Questions/Responses Options" << endl;
-                cout << " 4) Add Question" << endl;
-                cout << " 5) Delete Question" << endl;
+                cout << " 1) Status" << endl;
+                cout << " 2) Questions/Responses Options" << endl;
+                cout << " 3) Add Question" << endl;
+                cout << " 4) Delete Question" << endl;
                 cout << " 0) Cancel Survey Updates " << endl;
 
                 cin>>choice;
                 cin.ignore();
                 switch (choice) {
                     case 1:
-                        cout << endl << "UPDATE TITLE" << endl;
-                        updtTitle(surv2updt);
-                        break;
-                    case 2:
                         cout << endl << "UPDATE STATUS" << endl;
                         updtStatus(surv2updt);
                         break;
-                    case 3:
+                    case 2:
                         cout << endl << "UPDATE QUESTIONS" << endl;
                         updtSrvQs(surv2updt);
                         break;
-                    case 4:
+                    case 3:
                         cout << endl << "ADD QUESTION" << endl;
                         addSrvQ(surv2updt);
                         break;
-                    case 5:
+                    case 4:
                         cout << endl << "DELETE QUESTION" << endl;
                         deleteQ(surv2updt);
                         break;
@@ -344,15 +335,6 @@ public:
 
         indx = numQ - 1;
         survey->deleteQ(indx);
-        survey->display();
-    }
-
-    void updtTitle(Survey *survey) {
-        char newTitle[TSIZE];
-        cout << "Enter the New Title: ";
-        cin.getline(newTitle, TSIZE);
-
-        survey->setTitle(newTitle);
         survey->display();
     }
 

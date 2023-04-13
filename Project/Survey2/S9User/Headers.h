@@ -19,7 +19,7 @@
 #include <vector>     //Vector library
 #include <fstream>    //Filestream library
 #include <cstring>    //C string library
-#include <array>      //Array library
+#include <sstream>    //Stringstream library
 using namespace std; //Libraries compiled under std
 
 #include "Question.h"

@@ -46,7 +46,7 @@ public:
             cout << " 6) " << endl;
             cout << " 7) View Account Information" << endl;
             cout << " 8) " << endl;
-            cout << "99) " << endl;
+            cout << "99) Delete All" << endl;
             cout << "-1 ) Logout" << endl;
             cin>>choice;
             cin.ignore();
@@ -104,7 +104,7 @@ public:
             indx = survNum - 1;
 
             //Check that the selected survey hasn't already been completed
-            if (userSrvs.size() != 0) {
+            if (userSrvs.size() != 0 || completed == false) {
                 for (int i = 0; i < userSrvs.size(); i++) {
                     if (strcmp(surveys[indx]->getTitle(), userSrvs[i]->getTitle()) == 0) {
                         completed = true;
@@ -113,16 +113,137 @@ public:
 
                 //If not completed, add survey to completed surveys and save to bin
                 if (completed == false) {
-                    userSrvs.push_back(surveys[indx]);
-                    surveys[indx]->saveToBin(file);
                     surveys[indx]->display();
+                    //Prompt for responses to every question in survey
+                    for (int i = 0; i < surveys[indx]->getNumQs(); i++) {
+                        answerQ(i, surveys[indx]->getQs()[i]);
+                    }
+                    surveys[indx]->saveToBin(file);
+                    userSrvs.push_back(surveys[indx]);
                 } else {
                     cout << "You've Already Completed This Survey." << endl;
                 }
             }
-
-
         }
+    }
+
+    void answerQ(int i, Question *q) {
+        //Prompt for response, varies based on type of question
+        if (q->getType() == SINGLE) {
+            singleResp(i, q);
+        } else if (q->getType() == MULTIPLE) {
+            multResp(i, q);
+        } else if (q->getType() == WRITEIN) {
+            wrtInResp(i, q);
+        }
+    }
+
+    void singleResp(int i, Question *q) {
+        string response;
+
+        cout << "Enter Single Response for Question " << i + 1 << ": ";
+        getline(cin, response);
+
+        //Validate that response is a valid option
+        if (isdigit(response[0]) && (stoi(response) >= 1) && (stoi(response) <= q->getNumResp())) {
+            cout << "You entered: " << response << endl;
+            responses.push_back(response);
+        } else {
+            cout << "Invalid Input. Enter 1 - " << q->getNumResp() << endl;
+            answerQ(i, q);
+        }
+    }
+
+    void multResp(int i, Question *q) {
+        string multResp;
+        vector<string> listResp;
+        bool validInput = true;
+
+        cout << "Enter Multiple Responses for Question " << i + 1 << "(separated by commas): ";
+        getline(cin, multResp);
+
+        // Split the input and store into a vector of strings
+        listResp = strSplit(multResp);
+
+        // Validate that each response is a valid option
+        for (int i = 0; i < listResp.size(); i++) {
+            if (!isdigit(listResp[i][0]) || (stoi(listResp[i]) < 1) || (stoi(listResp[i]) > q->getNumResp())) {
+                validInput = false;
+                break;
+            }
+        }
+
+        // If input is valid, add to the vector of all responses, else prompt again
+        if (validInput) {
+            cout << "You Entered: " << multResp << endl;
+            responses.push_back(multResp);
+            cout << endl;
+        } else {
+            cout << "Invalid Input. Enter 1 - " << q->getNumResp() << endl;
+            answerQ(i, q);
+        }
+    }
+
+    void wrtInResp(int i, Question *q) {
+        string writeInResp;
+        string multResp;
+        vector<string> listResp;
+        bool validInput = true;
+        int sizeList;
+
+        cout<<"To Enter a Write-In Response, Include the Last Number Below \n";
+        cout << "Enter Multiple Responses for Question " << i + 1 << "(separated by commas): ";
+        getline(cin, multResp);
+
+        // Split the input and store into a vector of strings
+        listResp = strSplit(multResp);
+        sizeList=listResp.size();
+
+        // Validate that each response is a valid option
+        for (int i = 0; i < listResp.size(); i++) {
+            if (!isdigit(listResp[i][0]) || (stoi(listResp[i]) < 1) || (stoi(listResp[i]) > q->getNumResp())) {
+                validInput = false;
+                break;
+            }
+        }
+
+        // If input is valid, add to the vector of all responses, else prompt again
+        if (validInput) {
+            cout << "You Entered: " << multResp << endl;
+        } else {
+            cout << "Invalid Input. Enter 1 - " << q->getNumResp() << endl;
+            answerQ(i, q);
+        }
+        
+        //Prompt the user to enter a write-in response if they selected the last option
+        if(stoi(listResp[sizeList-1])==q->getNumResp()) {
+            cout << "Enter Write-In Response for Question " << i + 1 << ": ";
+            getline(cin, writeInResp);
+            multResp += ", " + writeInResp;
+            cout<<multResp<<endl;
+        }
+        
+        responses.push_back(multResp);
+    }
+
+    vector<string> strSplit(string s) {
+        // Split the input string and store into a vector of strings
+        vector<string> list;
+        stringstream ss(s);
+        string substr;
+        while (getline(ss, substr, ',')) {
+            list.push_back(substr);
+        }
+
+        return list;
+    }
+
+    void deleteAll() {
+        string confirm1, confirm2;
+
+        clearBin(usrFile + "Surveys.dat");
+        userSrvs.clear();
+        cout << endl << "All Surveys Have Been Deleted from the Database..." << endl;
     }
 
     void updtUsrInfo() {
@@ -149,8 +270,9 @@ public:
         userDB.close();
     }
 
-    void listSrvs(string file) {
-        readFromBin(file, surveys);
+    void listSrvs(string srvDBfile) {
+        readFromBin(usrFile + "Surveys.dat", userSrvs);
+        readFromBin(srvDBfile, surveys);
 
         cout << endl << "AVAILABLE SURVEYS" << endl;
         if (surveys.size() == 0) {
@@ -232,10 +354,6 @@ public:
             cout << "VIEW SURVEY" << endl;
             srvs[indx]->display();
         }
-    }
-
-    void deleteAll() {
-
     }
 
     //    Helper Functions
