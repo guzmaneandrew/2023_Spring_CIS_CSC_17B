@@ -98,7 +98,7 @@ public:
     string dispType() {
         if (typeInt == SINGLE) return "Single Choice";
         else if (typeInt == MULTIPLE) return "Multiple Choice";
-        else if (typeInt == WRITEIN) return "Write-In Response";
+        else if (typeInt == WRITEIN) return "Multiple Choice/Write-In Response";
         else return " ";
     }
 
