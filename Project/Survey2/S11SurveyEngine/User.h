@@ -459,7 +459,6 @@ public:
         srvs.clear(); //Clear vector first to read entire file contents to it
         fstream surveyDB(file, ios::in | ios::binary);
         if (!surveyDB) {
-            cerr << "ERROR: Unable to Open File for Reading." << endl;
             return;
         }
 

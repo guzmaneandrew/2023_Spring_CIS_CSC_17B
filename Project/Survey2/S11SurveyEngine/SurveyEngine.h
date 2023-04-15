@@ -25,6 +25,9 @@ private:
 public:
 
     SurveyEngine() {
+        loggedIn=false;
+        isAdmin=false;
+        
         do {
             //Main menu, login/registration prompt
             mainMenu();
@@ -42,7 +45,7 @@ public:
 
     void mainMenu() {
         char input = ' ';
-        bool validUsr, validPass, validAdmn;
+        bool validUsr, validAdmn;
 
         do {
             cout << "R) To Register \t L) To Log In" << endl;
@@ -61,10 +64,10 @@ public:
                     cin >> username;
                 }
                 //Check if username already exists
-                if (validtUsr(username))
+                if (validtName())
                     cout << "Account Already Exists" << endl;
             } while (username.length() < 6 || username.length() > 10 ||
-                    validtUsr(username));
+                    validtName());
 
             do {
                 //Prompt for password
@@ -77,7 +80,7 @@ public:
                 }
             } while (password.length() < 8 || password.length() > 12);
 
-            regUsr(username, password);
+            regUsr();
             cout << "Account Successfully Created." << endl;
         } else if (input == 'L' || input == 'l') {
             cout << "LOGIN" << endl;
@@ -86,29 +89,34 @@ public:
             cout << "Enter Password : ";
             cin >> password;
 
-            validUsr = validtUsr(username);
-            validPass = validtPass(password);
-            validAdmn = validtAdmn(username, password);
-
-            if (validUsr && validPass) {
-                loggedIn = true;
-                isAdmin = false;
-            } else if (validAdmn) {
-                loggedIn = true;
-                isAdmin = true;
-            } else if ((!validUsr && !validPass) || !validAdmn) {
-                loggedIn = false;
-                isAdmin = false;
-                cout << "You've Entered an Invalid Username or Password" << endl;
-            }
+            login();
         }
     }
+    
+    void login() {
+        bool validUsr = validtUsr();
+        bool validAdmn = validtAdmn();
+        
+        if (validUsr) {
+            cout << validUsr << endl;
+            loggedIn = true;
+            isAdmin = false;
+        } else if (validAdmn) {
+            cout << validAdmn << endl;
+            loggedIn = true;
+            isAdmin = true;
+        } else if (!validUsr || !validAdmn) {
+            loggedIn = false;
+            isAdmin = false;
+            cout << "You've Entered an Invalid Username or Password" << endl;
+        } 
+    }
 
-    void regUsr(string name, string pass) {
+    void regUsr() {
         //Add user to user DB
         UserInfo newUser;
-        strcpy(newUser.username, name.c_str());
-        strcpy(newUser.password, pass.c_str());
+        strcpy(newUser.username, username.c_str());
+        strcpy(newUser.password, password.c_str());
 
         fstream userDB("UserInfo.dat", ios::in | ios::app | ios::binary);
         userDB.seekp(ios::app);
@@ -116,13 +124,14 @@ public:
         userDB.close();
     }
 
-    bool validtUsr(string name) {
+    bool validtUsr() {
         fstream userDB("UserInfo.dat", ios::in | ios::app | ios::binary);
         UserInfo temp;
 
         userDB.seekg(ios::beg);
         while (userDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
-            if (strcmp(temp.username, name.c_str()) == 0) {
+            if (strcmp(temp.username, username.c_str()) == 0 &&
+                    strcmp(temp.password, password.c_str()) == 0) {
                 return true;
             }
         }
@@ -130,13 +139,13 @@ public:
         return false;
     }
 
-    bool validtPass(string pass) {
+    bool validtName() {
         fstream userDB("UserInfo.dat", ios::in | ios::app | ios::binary);
         UserInfo temp;
 
         userDB.seekg(ios::beg);
         while (userDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
-            if (strcmp(temp.password, pass.c_str()) == 0) {
+            if (strcmp(temp.username, username.c_str()) == 0) {
                 return true;
             }
         }
@@ -144,14 +153,14 @@ public:
         return false;
     }
 
-    bool validtAdmn(string name, string pass) {
+    bool validtAdmn() {
         fstream adminDB("AdminInfo.dat", ios::in | ios::app | ios::binary);
         AdminInfo temp;
 
         adminDB.seekg(ios::beg);
         while (adminDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
-            if (strcmp(temp.username, name.c_str()) == 0 &&
-                    strcmp(temp.password, pass.c_str()) == 0) {
+            if (strcmp(temp.username, username.c_str()) == 0 &&
+                    strcmp(temp.password, password.c_str()) == 0) {
                 return true;
             }
         }
