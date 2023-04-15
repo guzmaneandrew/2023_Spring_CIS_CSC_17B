@@ -9,11 +9,11 @@
 #include "Headers.h"
 
 //Program Execution Begins Here!!!
+
 int main(int argc, char** argv) {
 
+    cout << "Welcome" << endl;
     SurveyEngine srvEngine;
-    
-    srvEngine.mainMenu();
 
     return 0;
 }
