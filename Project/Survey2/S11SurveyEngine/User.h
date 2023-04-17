@@ -18,6 +18,7 @@
 struct UserInfo {
     char username[11];
     char password[13];
+    bool status;
 };
 
 class User {
@@ -33,6 +34,7 @@ public:
     User() {
         strcpy(info.username, " ");
         strcpy(info.password, " ");
+        info.status = true;
     }
 
     void prompt() {
@@ -44,10 +46,8 @@ public:
             cout << " 3) List Completed Surveys" << endl;
             cout << " 4) View an Available Survey" << endl;
             cout << " 5) View a Completed Survey" << endl;
-            cout << " 6) " << endl;
-            cout << " 7) View Account Information" << endl;
-            cout << " 8) " << endl;
-            cout << "99) Delete All" << endl;
+            cout << " 6) Update Account Information" << endl;
+            cout << "99) Delete All Completed Surveys" << endl;
             cout << "-1) Logout" << endl;
             cin>>choice;
             cin.ignore();
@@ -62,11 +62,8 @@ public:
             } else if (choice == 5) {
                 prntUsrSrvs();
             } else if (choice == 6) {
-
-            } else if (choice == 7) {
-                updtUsrInfo();
-            } else if (choice == 8) {
-                listUsrInfo();
+                updtUsrMenu();
+                if(info.status==false) break;  //if acc deactivated, prompt R/L
             } else if (choice == 99) {
                 deleteAll();
             }
@@ -77,6 +74,7 @@ public:
     void setUsrInfo(string name, string pass) {
         strcpy(info.username, name.c_str());
         strcpy(info.password, pass.c_str());
+        info.status = true;
         usrSrvFile = string(info.username) + "Surveys.dat";
         usrRespFile = string(info.username) + "Resp.dat";
     }
@@ -120,7 +118,7 @@ public:
                     for (int i = 0; i < surveys[indx]->getNumQs(); i++) {
                         cout << "Question " << i + 1 << endl;
                         answerQ(i, surveys[indx]->getQs()[i]);
-                        cout<<endl;
+                        cout << endl;
                     }
                     //Save selected survey and new responses to binary
                     userSrvs.push_back(surveys[indx]);
@@ -250,25 +248,121 @@ public:
         cout << endl << "All Surveys and Responses Have Been Deleted from the Database..." << endl;
     }
 
-    void updtUsrInfo() {
+    void updtUsrMenu() {
+        int choice;
+
+        do { //Print menu
+            cout << "Enter What You Would Like to Update" << endl;
+            cout << " 1) Password" << endl;
+            cout << " 2) Deactivate Account" << endl;
+            cout << " 0) Cancel Account Information Updates " << endl;
+
+            cin>>choice;
+            cin.ignore();
+            switch (choice) {
+                case 1:
+                    cout << endl << "UPDATE PASSWORD" << endl;
+                    updtPass();
+                    break;
+                case 2:
+                    cout << endl << "DEACTIVATE ACCOUNT" << endl;
+                    deactvtAcc();
+                    return;
+                    break;
+                case 0:
+                    cout << endl << "CANCEL UPDATES" << endl;
+                    break;
+                default:
+                    cout << endl << "You Picked an Invalid Option" << endl;
+                    break;
+            }
+        } while (choice != 0);
+    }
+
+    void updtPass() {
+        string passConf, newpass;
+        fstream userDB("UserInfo.dat", ios::in | ios::out | ios::binary);
+        UserInfo temp;
+
+        do {
+            cout << "To Update Your Password, Enter Your Current Password: ";
+            cin>>passConf;
+            cin.ignore();
+        } while (strcmp(passConf.c_str(), info.password) != 0);
+
+        do {
+            //Prompt for password
+            cout << "Enter New Password (8 to 12 Characters): ";
+            cin>>newpass;
+            cin.ignore();
+            while (newpass.length() < 8 || newpass.length() > 12) {
+                cout << "Password Does Not Meet Character Requirement" << endl;
+                cout << "Enter New Password (8 to 12 Characters): ";
+                cin>>newpass;
+                cin.ignore();
+            }
+        } while (newpass.length() < 8 || newpass.length() > 12);
+
+        while (userDB.read(reinterpret_cast<char*> (&temp), sizeof (temp))) {
+            if (strcmp(temp.username, info.username) == 0) {
+                // Update the password
+                strcpy(temp.password, newpass.c_str());
+                strcpy(info.password, newpass.c_str());
+
+                // Place cursor at the current read position to write new record
+                userDB.seekp(static_cast<unsigned long> (userDB.tellg()) - sizeof (temp));
+                userDB.write(reinterpret_cast<char*> (&temp), sizeof (temp));
+
+                cout << "Password Updated Successfully." << endl;
+                userDB.close();
+            }
+        }
+
         listUsrInfo();
 
-        //Change password and add to binary file 
+        return;
+    }
 
+    void deactvtAcc() {
+        string passConf; //confirm password
+        fstream userDB("UserInfo.dat", ios::in | ios::out | ios::binary);
+        UserInfo temp;
+
+        do {
+            cout << "To Deactivate Your Account, Enter Your Password: ";
+            cin>>passConf;
+            cin.ignore();
+        } while (strcmp(passConf.c_str(), info.password) != 0);
+
+        while (userDB.read(reinterpret_cast<char*> (&temp), sizeof (temp))) {
+            if (strcmp(temp.username, info.username) == 0 &&
+                    strcmp(temp.password, info.password) == 0) {
+                // Update the status
+                temp.status = false;
+                info.status = false;
+
+                // Place cursor at the current read position to write new record
+                userDB.seekp(static_cast<unsigned long> (userDB.tellg()) - sizeof (temp));
+                userDB.write(reinterpret_cast<char*> (&temp), sizeof (temp));
+
+                cout << "Account Deactivated." << endl;
+                userDB.close();
+            }
+        }
+
+        return;
     }
 
     void listUsrInfo() {
-        fstream userDB(string(info.username) + ".dat", ios::in | ios::app | ios::binary);
+        fstream userDB("UserInfo.dat", ios::in | ios::app | ios::binary);
         UserInfo temp;
 
         cout << endl << "Username \t Password" << endl << endl;
         userDB.seekg(ios::beg);
         while (userDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
-            //            cout<<"temp"<<temp.username<<endl;
-            //            cout<<"info"<<info.username<<endl;
             if (strcmp(temp.username, info.username) == 0) {
                 cout << left << setw(17);
-                cout << temp.username << setw(17) << temp.password << endl;
+                cout << temp.username << setw(17) << temp.password << endl << endl;
             }
         }
         userDB.close();
@@ -293,7 +387,7 @@ public:
         cout << endl;
     }
 
-    bool chkComplete(Survey *srv) {
+    bool chkComplete(Survey * srv) {
         bool complete;
 
         for (int i = 0; i < userSrvs.size(); i++) {

@@ -18,6 +18,7 @@
 
 class SurveyEngine {
 private:
+    bool isActive;
     bool isAdmin;
     bool loggedIn;
     string username;
@@ -25,9 +26,9 @@ private:
 public:
 
     SurveyEngine() {
-        loggedIn=false;
-        isAdmin=false;
-        
+        loggedIn = false;
+        isAdmin = false;
+
         do {
             //Main menu, login/registration prompt
             mainMenu();
@@ -92,24 +93,24 @@ public:
             login();
         }
     }
-    
+
     void login() {
         bool validUsr = validtUsr();
         bool validAdmn = validtAdmn();
-        
-        if (validUsr) {
-            cout << validUsr << endl;
+
+        if (validUsr && isActive == false) {
+            cout << "This Account Was Deactivated." << endl;
+        } else if (validUsr) {
             loggedIn = true;
             isAdmin = false;
         } else if (validAdmn) {
-            cout << validAdmn << endl;
             loggedIn = true;
             isAdmin = true;
         } else if (!validUsr || !validAdmn) {
             loggedIn = false;
             isAdmin = false;
-            cout << "You've Entered an Invalid Username or Password" << endl;
-        } 
+            cout<<"You Entered an Invalid Username/Password."<<endl;
+        }
     }
 
     void regUsr() {
@@ -117,6 +118,7 @@ public:
         UserInfo newUser;
         strcpy(newUser.username, username.c_str());
         strcpy(newUser.password, password.c_str());
+        newUser.status=true;
 
         fstream userDB("UserInfo.dat", ios::in | ios::app | ios::binary);
         userDB.seekp(ios::app);
@@ -131,7 +133,14 @@ public:
         userDB.seekg(ios::beg);
         while (userDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
             if (strcmp(temp.username, username.c_str()) == 0 &&
-                    strcmp(temp.password, password.c_str()) == 0) {
+                    strcmp(temp.password, password.c_str()) == 0 &&
+                    temp.status == true) {
+                isActive=true;
+                return true;
+            } else if (strcmp(temp.username, username.c_str()) == 0 &&
+                    strcmp(temp.password, password.c_str()) == 0 &&
+                    temp.status == false) {
+                isActive=false;
                 return true;
             }
         }
@@ -169,20 +178,6 @@ public:
     }
 
 };
-
-//    if (false) {
-//        Admin admin(username,password);
-//    } else {
-//        User user;
-//        user.setUsrInfo(username, password);
-//        user.prompt();
-//    }
-
-//register for a USER account (not an option for admin)
-//validate registration info - ensure an account doesn't already exist
-//login to an admin or user account
-//validate admin login
-//validate user login
 
 #endif /* SURVEYENGINE_H */
 

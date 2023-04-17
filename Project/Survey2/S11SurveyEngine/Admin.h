@@ -12,8 +12,7 @@
 
 #ifndef ADMIN_H
 #define ADMIN_H
-
-#include "Survey.h"
+#include "User.h"
 
 struct AdminInfo {
     char username[10];
@@ -39,9 +38,10 @@ public:
             cout << " 4) List Inactive Surveys" << endl;
             cout << " 5) View a Survey" << endl;
             cout << " 6) Update a Survey" << endl;
-            cout << " 7) Add Admin" << endl;
+            cout << " 7) List Users" << endl;
             cout << " 8) List Admins" << endl;
-            cout << "99) Delete All Surveys" << endl;
+            cout << " 9) Add Admin" << endl;
+            cout << "-99) Delete All Surveys" << endl;
             cout << "-1) Logout" << endl;
             cin>>choice;
             cin.ignore();
@@ -58,15 +58,32 @@ public:
             } else if (choice == 6) {
                 updtSrv();
             } else if (choice == 7) {
-                addAdmin();
+                listUsrs();
             } else if (choice == 8) {
                 listAdmins();
-            } else if (choice == 99) {
+            } else if (choice == 9) {
+                addAdmin();
+            } else if (choice == -99) {
                 deleteAll();
             }
 
         } while (choice != -1);
     };
+
+    void listUsrs() {
+        fstream userDB("UserInfo.dat", ios::in | ios::app | ios::binary);
+        UserInfo temp;
+
+        cout<<endl<<"LIST USERS"<<endl;
+        cout << endl << "Username \t Password \t Active" << endl << endl;
+        userDB.seekg(ios::beg);
+        while (userDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
+            cout << left << setw(17);
+            cout << temp.username << setw(17) << temp.password << setw(17)<<
+                    boolalpha<<temp.status<<endl;
+        }
+        userDB.close();
+    }
 
     void addAdmin() {
         //Add admins to admin DB
@@ -91,6 +108,7 @@ public:
         fstream adminDB("AdminInfo.dat", ios::in | ios::app | ios::binary);
         AdminInfo temp;
 
+        cout<<endl<<"List Admins"<<endl;
         cout << endl << "Username \t Password" << endl << endl;
         adminDB.seekg(ios::beg);
         while (adminDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
@@ -279,7 +297,7 @@ public:
 
     void deleteAll() {
         string confirm1, adminConf;
-        
+
         cout << "DANGER ZONE: DELETE ALL SURVEYS" << endl;
         cout << "This Action Will Permanently Delete All Surveys In Your Database.\n";
 
@@ -296,7 +314,7 @@ public:
             cout << "There Is No Going Back, Please Be Certain." << endl;
             cout << "To Confirm, Enter Admin Password (X to Cancel): ";
             getline(cin, adminConf);
-            if(adminConf=="X") break;
+            if (adminConf == "X") break;
         } while (adminConf != info.password);
 
         if (adminConf == info.password && confirm1 == "D") {
