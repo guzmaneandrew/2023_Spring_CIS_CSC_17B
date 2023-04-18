@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-MacOSX
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-MacOSX
-CND_ARTIFACT_NAME_Debug=storefrontv1
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/storefrontv1
+CND_ARTIFACT_NAME_Debug=storefrontv2
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/storefrontv2
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-MacOSX/package
-CND_PACKAGE_NAME_Debug=storefrontv1.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/storefrontv1.tar
+CND_PACKAGE_NAME_Debug=storefrontv2.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/storefrontv2.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-MacOSX
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-MacOSX
-CND_ARTIFACT_NAME_Release=storefrontv1
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/storefrontv1
+CND_ARTIFACT_NAME_Release=storefrontv2
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-MacOSX/storefrontv2
 CND_PACKAGE_DIR_Release=dist/Release/GNU-MacOSX/package
-CND_PACKAGE_NAME_Release=storefrontv1.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/storefrontv1.tar
+CND_PACKAGE_NAME_Release=storefrontv2.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-MacOSX/package/storefrontv2.tar
 #
 # include compiler specific variables
 #

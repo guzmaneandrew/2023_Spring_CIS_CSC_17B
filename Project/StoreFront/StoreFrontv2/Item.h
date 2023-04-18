@@ -17,7 +17,7 @@ const int NAMESIZE = 20; //max size of item name
 
 class Item {
 private:
-    char name[NAMESIZE];
+    string name;
     float price;
     int numStock;
 public:
@@ -25,14 +25,14 @@ public:
     Item() {
     }
 
-    Item(char name[], float price, int stock) {
-        strcpy(this->name, name);
+    Item(string name, float price, int stock) {
+        this->name = name;
         this->price = price;
         numStock = stock;
     }
 
-    void setName(char name[]) {
-        strcpy(this->name, name);
+    void setName(string name) {
+        this->name = name;
     }
 
     void setPrice(float price) {
@@ -43,7 +43,7 @@ public:
         numStock = s;
     }
 
-    const char *getName() const {
+    string getName() const {
         return name;
     }
 

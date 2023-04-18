@@ -25,6 +25,7 @@ using namespace std; //Libraries compiled under std
 
 //User Libraries
 #include "Item.h"
+#include "Store.h"
 
 //Global Constants
 //Physics/Chemistry/Math/Conversion Higher Dimension Only
