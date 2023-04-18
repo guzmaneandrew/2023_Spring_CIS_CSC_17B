@@ -31,7 +31,7 @@ public:
 
         int choice;
         do {
-            cout << endl << "Welcome Admin, " << info.username << endl;
+            cout << endl << "Hello Admin, " << info.username << endl;
             cout << " 1) Create New Survey" << endl;
             cout << " 2) List All Surveys" << endl;
             cout << " 3) List Active Surveys" << endl;

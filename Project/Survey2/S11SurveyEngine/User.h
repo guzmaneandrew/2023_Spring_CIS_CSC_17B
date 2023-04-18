@@ -40,7 +40,7 @@ public:
     void prompt() {
         int choice;
         do {
-            cout << endl << "Welcome, " << info.username << endl;
+            cout << endl << "Hello User, " << info.username << endl;
             cout << " 1) Complete Survey" << endl;
             cout << " 2) List Available Surveys" << endl;
             cout << " 3) List Completed Surveys" << endl;
@@ -63,7 +63,7 @@ public:
                 prntUsrSrvs();
             } else if (choice == 6) {
                 updtUsrMenu();
-                if(info.status==false) break;  //if acc deactivated, prompt R/L
+                if (info.status == false) return; //logout if account was deactivated
             } else if (choice == 99) {
                 deleteAll();
             }
@@ -369,6 +369,7 @@ public:
     }
 
     void listSrvs(string srvDBfile) {
+        int num = 1;
         readFromBin(usrSrvFile, userSrvs);
         readFromBin(srvDBfile, surveys);
 
@@ -379,9 +380,11 @@ public:
             cout << left;
             cout << setw(50) << "Title" << right << setw(12) << "Completed" << endl;
             for (int i = 0; i < surveys.size(); i++) {
-                cout << i + 1 << ") ";
-                cout << left << setw(50) << surveys[i]->getTitle() << "\t"
-                        << boolalpha << chkComplete(surveys[i]) << endl;
+                if (surveys[i]->getStatus() == true) {
+                    cout << num++ << ") ";
+                    cout << left << setw(50) << surveys[i]->getTitle() << "\t"
+                            << boolalpha << chkComplete(surveys[i]) << endl;
+                }
             }
         }
         cout << endl;
@@ -399,6 +402,7 @@ public:
     }
 
     void listCompSrvs(string file) {
+        int num = 1;
         bool none = true;
         readFromBin(file, userSrvs);
 
@@ -410,7 +414,7 @@ public:
             cout << setw(50) << "Title" << endl;
             for (int i = 0; i < userSrvs.size(); i++) {
                 if (userSrvs[i]->getStatus() == true) {
-                    cout << i + 1 << ") ";
+                    cout << num++ << ") ";
                     cout << left << setw(50) << userSrvs[i]->getTitle() << endl;
                     none = false;
                 }

@@ -12,7 +12,7 @@
 
 int main(int argc, char** argv) {
 
-    cout << "Welcome" << endl;
+    cout << "Welcome to SurveyMonster" << endl;
     SurveyEngine srvEngine;
 
     return 0;
