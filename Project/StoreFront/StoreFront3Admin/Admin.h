@@ -82,21 +82,25 @@ public:
         cin>>num;
         cin.ignore();
 
-        store->setItems(num);
-        store->saveBin("Store.dat");
+        //Create items and add to store items vector
+        for (int i = 0; i < num; i++) {
+            store->newItem();
+        }
+        reloadItms("Store.dat");
         store->display();
     }
 
     void viewItms() {
+        int num = 1; //number in list of items
+
+        store->clearItems();
         readBin("Store.dat");
 
-        cout << "ALL STORE ITEMS" << endl;
+        cout << endl << "ALL STORE ITEMS" << endl;
         if (store->getNumItms() == 0) {
             cout << "No Items to Retrieve from the Database." << endl;
         } else {
-            for (int i = 0; i < store->getNumItms(); i++) {
-                store->getItem(i)->display();
-            }
+            store->display();
         }
     }
 
@@ -104,6 +108,7 @@ public:
         bool none = true;
         int num = 1; //number in the list and number of items in stock
 
+        store->clearItems();
         readBin("Store.dat");
 
         cout << endl << "STORE ITEMS CURRENTLY IN STOCK" << endl;
@@ -129,6 +134,7 @@ public:
         bool none = true;
         int num = 1; //number in the list and number of items in stock
 
+        store->clearItems();
         readBin("Store.dat");
 
         cout << endl << "STORE ITEMS CURRENTLY NOT IN STOCK" << endl;
@@ -169,7 +175,7 @@ public:
     void deleteAll() {
         clearBin("Store.dat");
         store->clearItems();
-        cout << "All Items Have Been Deleted from Store" << endl;
+        cout << endl << "All Items Have Been Deleted from Store" << endl;
     }
 
     void readBin(string file) {
@@ -187,10 +193,10 @@ public:
         db.seekg(0, ios::beg);
 
         vector<Item *> items;
+        int numItms;
         //Read in item information until size of file reached
         while (db.tellg() < size) {
             //Read number of items
-            int numItms;
             db.read(reinterpret_cast<char *> (&numItms), sizeof (int));
             for (int i = 0; i < numItms; i++) {
                 int len;
@@ -212,8 +218,7 @@ public:
         }
         //Set store items vector
         store->setItems(items);
-        store->setNumItems(items.size());
-
+        store->setNumItems(numItms);
         db.close();
     }
 

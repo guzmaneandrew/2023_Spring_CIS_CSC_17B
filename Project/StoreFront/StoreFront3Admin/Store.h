@@ -48,6 +48,11 @@ public:
         }
         items.clear();
     }
+    
+    void setItem(string n,float p, int s) {
+        Item *newItem=new Item(n,p,s);
+        items.push_back(newItem);
+    }
 
     void setItems(int num) {
         numItems = num;
@@ -61,7 +66,7 @@ public:
     }
 
     void setNumItems(int n) {
-        numItems = n;
+        numItems++;
     }
 
     void setNumItems() {
@@ -69,9 +74,11 @@ public:
     }
 
     void display() const {
+        int num=1;
+        
         for (int i = 0; i < items.size(); i++) {
+            cout<<num++<<") "<<endl;
             items[i]->display();
-            cout << endl;
         }
     }
 
@@ -93,8 +100,8 @@ public:
         cin.ignore();
 
         //Create new Item object
-        Item *item = new Item(name, price, stock);
-        items.push_back(item);
+        setItem(name,price,stock);
+        setNumItems();
     }
 
     void deleteItem(int i) {
