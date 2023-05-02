@@ -115,7 +115,6 @@ public:
     }
 
     void saveBin(string file) {
-        cout<<"saveBin1"<<endl;
         fstream storeDB(file, ios::out | ios::binary | ios::app);
 
         if (!storeDB) {
@@ -125,11 +124,9 @@ public:
         
         //Write number of items to binary file
         storeDB.write(reinterpret_cast<char *> (&numItems), sizeof (int));
-        cout<<"saveBin2"<<endl;
         
         //Write each item info to binary file
         for (int i = 0; i < numItems; i++) {
-            cout<<"saveBin3."<<i<<endl;
             string name;
             float price;
             int numStck;

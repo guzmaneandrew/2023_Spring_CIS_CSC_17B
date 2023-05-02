@@ -84,11 +84,10 @@ public:
 
         //Create items and add to store items vector
         for (int i = 0; i < num; i++) {
-            cout << i << endl;
             store->newItem();
         }
         reloadItms("Store.dat");
-        //        store->display();
+        store->display();
     }
 
     void listItms() {
@@ -310,6 +309,16 @@ public:
             return;
         }
 
+        //Move cursor to end of file to check if file is empty
+        db.seekg(0, ios::end);
+        if (db.tellg() == 0) {
+            db.close();
+            return;
+        }
+
+        //Set the file cursor to the beginning of the file
+        db.seekg(0, ios::beg);
+        
         //Read number of items from binary file
         vector<Item *> items;
         int numItms;
@@ -335,6 +344,7 @@ public:
 
         //Set store items vector
         store->setItems(items);
+        cout << numItms << endl;
         store->setNumItems(numItms);
         db.close();
     }
