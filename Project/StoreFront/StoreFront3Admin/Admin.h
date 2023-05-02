@@ -209,7 +209,7 @@ public:
                         updtNumStk(itm2updt);
                         break;
                     case 0:
-                        cout << endl << "CANCEL SURVEY UPDATES" << endl;
+                        cout << endl << "CANCEL ITEM UPDATES" << endl;
                         break;
                     default:
                         cout << endl << "You picked an invalid option" << endl;
@@ -249,16 +249,42 @@ public:
         item->setStock(newStk);
     }
 
+ 
+    void addAdmin() {
+        //Add admins to admin DB
+        string username, password;
+        cout << "Enter the Username for the Admin: ";
+        cin>>username;
+        cout << "Enter the Password for the Admin: ";
+        cin>>password;
+
+        AdminInfo newAdmin;
+        strcpy(newAdmin.username, username.c_str());
+        strcpy(newAdmin.password, password.c_str());
+
+        fstream adminDB("AdminInfo.dat", ios::in | ios::app | ios::binary);
+        adminDB.seekp(ios::app);
+        adminDB.write(reinterpret_cast<char *> (&newAdmin), sizeof (newAdmin));
+        adminDB.close();
+        listAdmins();
+    }
+
     void listUsrs() {
 
     }
 
     void listAdmins() {
+        fstream adminDB("AdminInfo.dat", ios::in | ios::app | ios::binary);
+        AdminInfo temp;
 
-    }
-
-    void addAdmin() {
-
+        cout << endl << "LIST ADMINS" << endl;
+        cout << endl << "Username \t Password" << endl << endl;
+        adminDB.seekg(ios::beg);
+        while (adminDB.read(reinterpret_cast<char *> (&temp), sizeof (temp))) {
+            cout << left << setw(17);
+            cout << temp.username << setw(17) << temp.password << endl;
+        }
+        adminDB.close();
     }
 
     void deleteAll() {
@@ -318,7 +344,7 @@ public:
 
         //Set the file cursor to the beginning of the file
         db.seekg(0, ios::beg);
-        
+
         //Read number of items from binary file
         vector<Item *> items;
         int numItms;
@@ -344,7 +370,6 @@ public:
 
         //Set store items vector
         store->setItems(items);
-        cout << numItms << endl;
         store->setNumItems(numItms);
         db.close();
     }
@@ -356,7 +381,7 @@ public:
     }
 
     void reloadItms(string file) {
-        //Clear binary file, output vector to binary, then read from binary
+        //Clear binary file, output items to binary, then read from binary
         clearBin(file);
         store->saveBin(file);
         readBin(file);
