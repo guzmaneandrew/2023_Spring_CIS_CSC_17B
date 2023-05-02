@@ -48,10 +48,11 @@ public:
         }
         items.clear();
     }
-    
-    void setItem(string n,float p, int s) {
-        Item *newItem=new Item(n,p,s);
+
+    void setItem(string n, float p, int s) {
+        Item *newItem = new Item(n, p, s);
         items.push_back(newItem);
+        numItems++;
     }
 
     void setItems(int num) {
@@ -66,7 +67,7 @@ public:
     }
 
     void setNumItems(int n) {
-        numItems++;
+        numItems=n;
     }
 
     void setNumItems() {
@@ -74,10 +75,10 @@ public:
     }
 
     void display() const {
-        int num=1;
-        
+        int num = 1;
+
         for (int i = 0; i < items.size(); i++) {
-            cout<<num++<<") "<<endl;
+            cout << num++ << ") " << endl;
             items[i]->display();
         }
     }
@@ -99,9 +100,7 @@ public:
         cin>>stock;
         cin.ignore();
 
-        //Create new Item object
         setItem(name,price,stock);
-        setNumItems();
     }
 
     void deleteItem(int i) {
@@ -116,18 +115,21 @@ public:
     }
 
     void saveBin(string file) {
+        cout<<"saveBin1"<<endl;
         fstream storeDB(file, ios::out | ios::binary | ios::app);
 
         if (!storeDB) {
             cerr << "Error: Unable to Open File for Writing." << endl;
             return;
         }
-
+        
         //Write number of items to binary file
         storeDB.write(reinterpret_cast<char *> (&numItems), sizeof (int));
-
+        cout<<"saveBin2"<<endl;
+        
         //Write each item info to binary file
         for (int i = 0; i < numItems; i++) {
+            cout<<"saveBin3."<<i<<endl;
             string name;
             float price;
             int numStck;
@@ -181,6 +183,7 @@ public:
         //Create new Store object, set the items, and display
         Store *store = new Store();
         store->setItems(items);
+        store->setNumItems(num);
         store->display();
 
         storeDB.close();
