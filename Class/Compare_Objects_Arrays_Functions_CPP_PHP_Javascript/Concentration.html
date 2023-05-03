@@ -3,6 +3,7 @@
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Concentration</title>
+        <!--Similar to #include statements in c++-->
         <script type="text/javascript" src="Card.js"></script>
         <script type="text/javascript" src="ConcCookie.js"></script>
         <script type="text/javascript">
@@ -13,24 +14,28 @@
             var temparray = new Array();
             var gameBoard=new Array();
             var clickable=true;
-            var ctr=0;
+            var ctr=0;      //counter
             var correct=0;
             var clicked=new Array(0,1);
 
             //Initializes the Deck and the Game Board
             function start(){	
-                //Create a deck of 52 cards
+                //Deck of 52 cards
                 var nCards=52;
+                
+                //Create 52 Card objects
                 var card=new Array(nCards);
                 for(var i=0;i<card.length;i++){
                     card[i]=new Card(i);
                 }
+                
                 //Shuffle the cards by first creating an indexed array
                 var idx=new Array(nCards);
                 for(var i=0;i<idx.length;i++){
                     idx[i]=i;
                 }
-                //Now mix up the indexed array
+                
+                //Now mix up the indexed array vs shuffling array of cards
                 for(var i=0;i<idx.length;i++){
                     var temp=Math.random()*51;
                     temp=temp.toFixed(0);
@@ -40,11 +45,13 @@
                     idx[i]=idx[temp];
                     idx[temp]=val;
                 }
-                //Put the cards in the Deck
+                
+                //Use indexed array to put the (shuffled) cards in the Deck
                 for(var i=0;i<52;i++){
                     deck[i]=card[idx[i]];
                 }
-                //Place the choosen cards on the Game Board
+                
+                //Place 36 cards on the Game Board, only need 18 unique cards
                 for(var i=0;i<36;i++){
                     if(i<18){
                         gameBoard[i]=deck[idx[i]];
@@ -52,7 +59,9 @@
                         gameBoard[i]=deck[idx[i-18]];	
                     }
                 }
-                randomize()
+                
+                //Shuffle the cards on the board
+                randomize();
             }
 
             function randomize(){
@@ -71,21 +80,27 @@
             function revealImage(current){
                 if(clickable){
                     clickable = false; 
+                    //Display the card image
                     document.Form["card"+current].src = gameBoard[current].picture;
                     if(ctr==0){
+                        //Set current card as clicked
                         clicked[0] = current;
                         clickable = true;
                         ctr++;
                     }
                 }else{
+                    //Display the original card back image
                     document.Form["card"+current].src = gameBoard[current].picture;
+                    //Set current card as not clicked
                     clicked[1] = current;
                     ctr = 0;
+                    //Set timer to reveal image for 300 secs
                     setTimeout('compare()', 300);
                 }
             }
 
             function compare(){
+                //If both cards clicked are equal, remove attributes that allows to click
                 if(gameBoard[clicked[0]]==gameBoard[clicked[1]]){
                     correct++;
                     document.Form.pairsCorrect.value = correct / 2+" Pair";
@@ -94,11 +109,13 @@
                     document.getElementById("cardImg"+clicked[0]).removeAttribute("href");
                     document.getElementById("cardImg"+clicked[1]).removeAttribute("href");
                     clickable = true;
+               //Else if not equal, display original card backs
                 }else if(gameBoard[clicked[0]]!=gameBoard[clicked[1]]){
                     document.Form["card"+clicked[0]].src = "Cards/Back.jpg";
                     document.Form["card"+clicked[1]].src = "Cards/Back.jpg";
                     clickable = true;
                 }
+                //If all cards found, game is over
                 if(correct>=36){
                     alert("Congratulations!\n");
                     javascript:location.reload(true);
@@ -119,15 +136,21 @@
                 document.write('onClick="javascript:location.reload(true)" /></div>');
                 document.write('<div align="center"><INPUT NAME="player" value="'+username+'" READONLY size="12">');
                 document.write('<INPUT NAME="pairsCorrect" value="0 Pair" READONLY size="12"></div>');
+                //Create table, centered, with no border
                 document.write('<table align="center" border="0">');
                     var cardCount=0;
                     start();
                     for(row=0;row<6;row++){
+                        //First row
                         document.write('<tr>');
                         for(col=0;col<6;col++){
+                            //Align each element to be centered
                             document.write('<td align="center">');
+                            //Associate function to reveal card image and a unique id
                             document.write('<a href="javascript:revealImage('+cardCount+')" id="cardImg'+cardCount+'"'); 
+                            //Add onClick attribute and function to reveal the card image
                             document.write('onClick="revealImage('+cardCount+')">');
+                            //Add onClick attribute and function to view the card back
                             document.write('<img src="Cards/Back.jpg" name="card'+cardCount+'" border="0"></a></td>');
                             cardCount++;
                         }
