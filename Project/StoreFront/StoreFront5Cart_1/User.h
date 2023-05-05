@@ -25,6 +25,7 @@ class User {
 private:
     UserInfo info;
     Store *store;
+    Cart *cart;
     string usrCartFile;
 public:
 
@@ -43,7 +44,7 @@ public:
             cout << "  3) List Store Items Currently Not In Stock" << endl;
             cout << "  4) View Cart" << endl;
             cout << "  5) Add Items to Cart" << endl;
-            cout << "  6) Remove Items from Cart" << endl;
+            cout << "  6) Delete Item in Cart" << endl;
             cout << "-99) Delete All Items in Cart" << endl;
             cout << "- 1) Logout" << endl;
             cin>>choice;
@@ -55,13 +56,12 @@ public:
             } else if (choice == 3) {
                 listItmsNotInStck();
             } else if (choice == 4) {
-
+                listItmsInCart(usrCartFile);
             } else if (choice == 5) {
-
+                addItem();
             } else if (choice == 6) {
-
-                if (info.status == false) return; //logout if account was deactivated
-            } else if (choice == 99) {
+                deleteItm();
+            } else if (choice == -99) {
 
             }
 
@@ -138,6 +138,27 @@ public:
         }
     }
 
+    void listItmsInCart(string file) {
+        int num = 1; //number in list of items
+
+        readBin(file);
+
+        cout << endl << "ALL CART ITEMS" << endl;
+        if (cart->getNumItms() == 0) {
+            cout << "No Items to Retrieve from the Database." << endl;
+        } else {
+            cart->display();
+        }
+    }
+
+    void addItem() {
+
+    }
+
+    void deleteItm() {
+
+    }
+
     void readBin(string file) {
         fstream db(file, ios::in | ios::binary);
 
@@ -179,11 +200,25 @@ public:
             items.push_back(newItem);
         }
 
+        db.close();
+    }
+
+    void setStore(string file) {
+        readBin(file);
+
         //Set store items vector
         store = new Store();
-        store->setItems(items);
-        store->setNumItems(numItms);
-        db.close();
+        store->setItems(store->getItems());
+        store->setNumItems(store->getNumItms());
+    }
+
+    void setCart(string file) {
+        readBin(file);
+
+        //Set Cart items vector
+        cart = new Cart();
+        cart->setItems(cart->getItems());
+        cart->setNumItems(cart->getNumItms());
     }
 
     void clearBin(string file) {

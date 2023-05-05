@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=StoreFront4User
+PROJECTNAME=StoreFront5Cart
 
 # Active Configuration
 DEFAULTCONF=Debug

@@ -25,6 +25,7 @@ class User {
 private:
     UserInfo info;
     Store *store;
+    Cart *cart;
     string usrCartFile;
 public:
 
@@ -43,8 +44,8 @@ public:
             cout << "  3) List Store Items Currently Not In Stock" << endl;
             cout << "  4) View Cart" << endl;
             cout << "  5) Add Items to Cart" << endl;
-            cout << "  6) Remove Items from Cart" << endl;
-            cout << "-99) Delete All Items in Cart" << endl;
+            cout << "  6) Delete Items From Cart" << endl;
+            cout << "-99) Delete All Items From Cart" << endl;
             cout << "- 1) Logout" << endl;
             cin>>choice;
             cin.ignore();
@@ -55,9 +56,9 @@ public:
             } else if (choice == 3) {
                 listItmsNotInStck();
             } else if (choice == 4) {
-
+                listItmsInCart();
             } else if (choice == 5) {
-
+                addItems();
             } else if (choice == 6) {
 
                 if (info.status == false) return; //logout if account was deactivated
@@ -78,7 +79,7 @@ public:
     void listItms() {
         int num = 1; //number in list of items
 
-        readBin("Store.dat");
+        readStoreBin("Store.dat");
 
         cout << endl << "ALL STORE ITEMS" << endl;
         if (store->getNumItms() == 0) {
@@ -92,7 +93,7 @@ public:
         bool none = true;
         int num = 1; //number in the list and number of items in stock
 
-        readBin("Store.dat");
+        readStoreBin("Store.dat");
 
         cout << endl << "STORE ITEMS CURRENTLY IN STOCK" << endl;
         if (store->getNumItms() == 0) {
@@ -117,7 +118,7 @@ public:
         bool none = true;
         int num = 1; //number in the list and number of items in stock
 
-        readBin("Store.dat");
+        readStoreBin("Store.dat");
 
         cout << endl << "STORE ITEMS CURRENTLY NOT IN STOCK" << endl;
         if (store->getNumItms() == 0) {
@@ -138,7 +139,44 @@ public:
         }
     }
 
-    void readBin(string file) {
+    void listItmsInCart() {
+        int num = 1; //number in list of items
+
+        readCartBin(usrCartFile);
+
+        cout << endl << "ALL CART ITEMS" << endl;
+        if (cart->getNumItms() == 0) {
+            cout << "No Items to Retrieve from the Database." << endl;
+        } else {
+            cart->display();
+        }
+    }
+    
+    void addItems() {
+        string itmName;
+        int numInStk,numReq;        //num items in stock, num requested
+        Item *itm2Add;
+        bool valid=false;
+        
+        listItmsInStck();
+        
+        do {
+            //Prompt for item to add
+            cout<<"Enter the Item To Add to Your Cart: ";
+            getline(cin,itmName);
+            
+            //Search for item in store items vector
+                for (int i = 0; i < store->getNumItms(); i++) {
+                    if (store->getItem(i)->getName() == itmName) {
+                        itm2Add = store->getItem(i);
+                        valid = true;
+                    }
+                }
+        } while(itmName == ""||valid==false);
+        
+    }
+    
+    void readStoreBin(string file) {
         fstream db(file, ios::in | ios::binary);
 
         if (!db) {
@@ -186,6 +224,54 @@ public:
         db.close();
     }
 
+    void readCartBin(string file) {
+        fstream db(file, ios::in | ios::binary);
+
+        if (!db) {
+            cerr << "ERROR: Unable to Open File for Reading." << endl;
+            return;
+        }
+
+        //Move cursor to end of file to check if file is empty
+        db.seekg(0, ios::end);
+        if (db.tellg() == 0) {
+            db.close();
+            return;
+        }
+
+        //Set the file cursor to the beginning of the file
+        db.seekg(0, ios::beg);
+
+        //Read number of items from binary file
+        vector<Item *> items;
+        int numItms;
+        db.read(reinterpret_cast<char *> (&numItms), sizeof (int));
+
+        //Read each of the item's properties in the file
+        for (int i = 0; i < numItms; i++) {
+            int len;
+            string name;
+            float price;
+            int numStck;
+
+            db.read(reinterpret_cast<char *> (&len), sizeof (int));
+            name.resize(len);
+            db.read(&name[0], len);
+            db.read(reinterpret_cast<char *> (&price), sizeof (float));
+            db.read(reinterpret_cast<char *> (&numStck), sizeof (int));
+
+            //Create new Item object and set it's properties
+            Item *newItem = new Item(name, price, numStck);
+            items.push_back(newItem);
+        }
+
+        //Set cart items vector
+        cart = new Cart();
+        cart->setItems(items);
+        cart->setNumItems(numItms);
+        db.close();
+    }
+
     void clearBin(string file) {
         //Deletes all contents of the binary file
         ofstream DB(file, ios::out | ios::trunc);
@@ -195,8 +281,8 @@ public:
     void reloadItms(string file) {
         //Clear binary file, output items to binary, then read from binary
         clearBin(file);
-        store->saveBin(file);
-        readBin(file);
+        cart->saveBin(file);
+        readStoreBin(file);
     }
 };
 

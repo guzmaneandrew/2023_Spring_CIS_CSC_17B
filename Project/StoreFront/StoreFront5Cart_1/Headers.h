@@ -27,6 +27,7 @@ using namespace std; //Libraries compiled under std
 #include "Item.h"
 #include "Store.h"
 #include "Admin.h"
+#include "Cart.h"
 #include "User.h"
 
 //Global Constants

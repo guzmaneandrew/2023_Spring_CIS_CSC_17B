@@ -4,34 +4,33 @@
  */
 
 /* 
- * File:   Store.h
+ * File:   Cart.h
  * Author: andrewguzman
  *
- * Created on April 17, 2023, 2:04 AM
+ * Created on May 4, 2023, 12:10 AM
  */
 
-#ifndef STORE_H
-#define STORE_H
-#include "Headers.h"
+#ifndef CART_H
+#define CART_H
 
-class Store {
+class Cart {
 private:
     vector<Item *> items;
     int numItems;
 public:
 
-    Store() {
+    Cart() {
         numItems = 0;
     }
 
-    ~Store() {
+    ~Cart() {
         for (int i = 0; i < items.size(); i++) {
             delete items[i];
         }
     }
 
     int getNumItms() const {
-        return numItems;
+        return items.size();
     }
 
     vector<Item *> getItems() const {
@@ -49,17 +48,9 @@ public:
         items.clear();
     }
 
-    void setItem(string n, float p, int s) {
-        Item *newItem = new Item(n, p, s);
-        items.push_back(newItem);
+    void setItem(Item *item) {
+        items.push_back(item);
         numItems++;
-    }
-
-    void setItems(int num) {
-        numItems = num;
-        for (int i = 0; i < num; i++) {
-            newItem();
-        }
     }
 
     void setItems(vector<Item *> items) {
@@ -67,7 +58,7 @@ public:
     }
 
     void setNumItems(int n) {
-        numItems=n;
+        numItems = n;
     }
 
     void setNumItems() {
@@ -77,30 +68,10 @@ public:
     void display() const {
         int num = 1;
 
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < numItems; i++) {
             cout << num++ << ") " << endl;
             items[i]->display();
         }
-    }
-
-    void newItem() {
-        //Receive input for new item
-        string name;
-        float price;
-        int stock;
-
-        cout << "Item Name: ";
-        getline(cin, name);
-
-        cout << "Item Price: $";
-        cin>>price;
-        cin.ignore();
-
-        cout << "Number in Stock: ";
-        cin>>stock;
-        cin.ignore();
-
-        setItem(name,price,stock);
     }
 
     void deleteItem(int i) {
@@ -121,10 +92,10 @@ public:
             cerr << "Error: Unable to Open File for Writing." << endl;
             return;
         }
-        
+
         //Write number of items to binary file
         storeDB.write(reinterpret_cast<char *> (&numItems), sizeof (int));
-        
+
         //Write each item info to binary file
         for (int i = 0; i < numItems; i++) {
             string name;
@@ -177,16 +148,15 @@ public:
             items.push_back(newItem);
         }
 
-        //Create new Store object, set the items, and display
-        Store *store = new Store();
-        store->setItems(items);
-        store->setNumItems(num);
-        store->display();
+        //Create new Cart object, set the items, and display
+        Cart *cart = new Cart();
+        cart->setItems(items);
+        cart->setNumItems(num);
+        cart->display();
 
         storeDB.close();
     }
 };
 
-
-#endif /* STORE_H */
+#endif /* CART_H */
 

@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>Admin.h</itemPath>
+      <itemPath>Cart.h</itemPath>
       <itemPath>Headers.h</itemPath>
       <itemPath>Item.h</itemPath>
       <itemPath>Store.h</itemPath>
@@ -43,6 +44,8 @@
       </compileType>
       <item path="Admin.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Cart.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Headers.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Item.h" ex="false" tool="3" flavor2="0">
@@ -75,6 +78,8 @@
         </asmTool>
       </compileType>
       <item path="Admin.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Cart.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Headers.h" ex="false" tool="3" flavor2="0">
       </item>
