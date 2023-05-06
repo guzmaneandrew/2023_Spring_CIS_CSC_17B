@@ -68,7 +68,7 @@ public:
     void display() const {
         int num = 1;
 
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < numItems; i++) {
             cout << num++ << ") " << endl;
             items[i]->display();
         }

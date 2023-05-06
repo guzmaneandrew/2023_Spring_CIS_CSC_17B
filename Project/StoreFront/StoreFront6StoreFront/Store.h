@@ -31,7 +31,7 @@ public:
     }
 
     int getNumItms() const {
-        return items.size();
+        return numItems;
     }
 
     vector<Item *> getItems() const {
