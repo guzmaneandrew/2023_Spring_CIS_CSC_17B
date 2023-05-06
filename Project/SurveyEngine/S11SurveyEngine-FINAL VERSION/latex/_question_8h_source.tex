@@ -1,0 +1,150 @@
+\hypertarget{_question_8h_source}{}\doxysection{Question.\+h}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-\/default.txt to change this license}}
+\DoxyCodeLine{3 \textcolor{comment}{ * Click nbfs://nbhost/SystemFileSystem/Templates/cppFiles/file.h to edit this template}}
+\DoxyCodeLine{4 \textcolor{comment}{ */}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{comment}{/* }}
+\DoxyCodeLine{7 \textcolor{comment}{ * File:   Question.h}}
+\DoxyCodeLine{8 \textcolor{comment}{ * Author: andrewguzman}}
+\DoxyCodeLine{9 \textcolor{comment}{ *}}
+\DoxyCodeLine{10 \textcolor{comment}{ * Created on April 8, 2023, 10:20 PM}}
+\DoxyCodeLine{11 \textcolor{comment}{ */}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#ifndef QUESTION\_H}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#define QUESTION\_H}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}Headers.h"{}}}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{enum} QType \{}
+\DoxyCodeLine{17     SINGLE = 1, MULTIPLE = 2, WRITEIN = 3}
+\DoxyCodeLine{18 \}; \textcolor{comment}{//Question type}}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{const} \textcolor{keywordtype}{int} QRSIZE = 100; \textcolor{comment}{//max size of question and response}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{class }\mbox{\hyperlink{class_question}{Question}} \{}
+\DoxyCodeLine{23 \textcolor{keyword}{private}:}
+\DoxyCodeLine{24     \textcolor{keywordtype}{char} question[QRSIZE];}
+\DoxyCodeLine{25     \textcolor{keywordtype}{int} typeInt;}
+\DoxyCodeLine{26     \textcolor{keywordtype}{int} numRespOptions;}
+\DoxyCodeLine{27     vector<string> respOptions;}
+\DoxyCodeLine{28 \textcolor{keyword}{public}:}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \mbox{\hyperlink{class_question}{Question}}() \{}
+\DoxyCodeLine{31         strcpy(question, \textcolor{stringliteral}{"{} "{}});}
+\DoxyCodeLine{32         typeInt = 0;}
+\DoxyCodeLine{33         numRespOptions = 0;}
+\DoxyCodeLine{34     \}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     \mbox{\hyperlink{class_question}{Question}}(\textcolor{keywordtype}{char} q[], \textcolor{keywordtype}{int} type, \textcolor{keywordtype}{int} numResp, vector<string> options) \{}
+\DoxyCodeLine{37         strcpy(question, q);}
+\DoxyCodeLine{38         typeInt = type;}
+\DoxyCodeLine{39         numRespOptions = numResp;}
+\DoxyCodeLine{40         respOptions = options;}
+\DoxyCodeLine{41     \}}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{keywordtype}{void} setQ(\textcolor{keywordtype}{char} q[]) \{}
+\DoxyCodeLine{44         strcpy(question, q);}
+\DoxyCodeLine{45     \}}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keywordtype}{void} setType(\textcolor{keywordtype}{int} t) \{}
+\DoxyCodeLine{48         typeInt = t;}
+\DoxyCodeLine{49     \}}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51     \textcolor{keywordtype}{void} setNumResp(\textcolor{keywordtype}{int} n) \{}
+\DoxyCodeLine{52         numRespOptions = n;}
+\DoxyCodeLine{53     \}}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55     \textcolor{keywordtype}{void} setRespOptions(vector<string> options) \{}
+\DoxyCodeLine{56         respOptions = options;}
+\DoxyCodeLine{57     \}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59     \textcolor{keywordtype}{void} setResp(\textcolor{keywordtype}{int} i) \{}
+\DoxyCodeLine{60         \textcolor{keywordtype}{string} response;}
+\DoxyCodeLine{61         cout << endl<< \textcolor{stringliteral}{"{}Enter New Response Option: "{}};}
+\DoxyCodeLine{62         getline(cin, response);}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64         \textcolor{keywordflow}{if} (i >= 0 \&\& i < respOptions.size()) \{}
+\DoxyCodeLine{65             respOptions[i] = response;}
+\DoxyCodeLine{66         \}}
+\DoxyCodeLine{67     \}}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69     \textcolor{keywordtype}{void} addResp() \{}
+\DoxyCodeLine{70         numRespOptions++;}
+\DoxyCodeLine{71         \textcolor{keywordtype}{string} response;}
+\DoxyCodeLine{72         cout << \textcolor{stringliteral}{"{}Enter New Response Option: "{}};}
+\DoxyCodeLine{73         getline(cin, response);}
+\DoxyCodeLine{74         respOptions.push\_back(response);}
+\DoxyCodeLine{75     \}}
+\DoxyCodeLine{76     }
+\DoxyCodeLine{77     \textcolor{keywordtype}{void} deleteROpt(\textcolor{keywordtype}{int} i) \{}
+\DoxyCodeLine{78         numRespOptions-\/-\/;}
+\DoxyCodeLine{79         respOptions.erase(respOptions.begin() + i);}
+\DoxyCodeLine{80     \}}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82     \textcolor{keyword}{const} \textcolor{keywordtype}{char} *getQ()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{83         \textcolor{keywordflow}{return} question;}
+\DoxyCodeLine{84     \}}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86     \textcolor{keywordtype}{int} getType()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{87         \textcolor{keywordflow}{return} typeInt;}
+\DoxyCodeLine{88     \}}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{90     \textcolor{keywordtype}{int} getNumResp()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{91         \textcolor{keywordflow}{return} respOptions.size();}
+\DoxyCodeLine{92     \}}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{94     vector<string> getRespOptions()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{95         \textcolor{keywordflow}{return} respOptions;}
+\DoxyCodeLine{96     \}}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98     \textcolor{keywordtype}{string} dispType() \{}
+\DoxyCodeLine{99         \textcolor{keywordflow}{if} (typeInt == SINGLE) \textcolor{keywordflow}{return} \textcolor{stringliteral}{"{}Single Choice"{}};}
+\DoxyCodeLine{100         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (typeInt == MULTIPLE) \textcolor{keywordflow}{return} \textcolor{stringliteral}{"{}Multiple Choice"{}};}
+\DoxyCodeLine{101         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (typeInt == WRITEIN) \textcolor{keywordflow}{return} \textcolor{stringliteral}{"{}Multiple Choice/Write-\/In Response"{}};}
+\DoxyCodeLine{102         \textcolor{keywordflow}{else} \textcolor{keywordflow}{return} \textcolor{stringliteral}{"{} "{}};}
+\DoxyCodeLine{103     \}}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105     \textcolor{keywordtype}{void} display() \{}
+\DoxyCodeLine{106         cout << question << endl;}
+\DoxyCodeLine{107         cout << \textcolor{stringliteral}{"{}Type: "{}} << dispType() << endl;}
+\DoxyCodeLine{108         cout << left;}
+\DoxyCodeLine{109         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < numRespOptions; i++) \{}
+\DoxyCodeLine{110             cout << setw(3) << i + 1 << \textcolor{stringliteral}{"{}) "{}} << respOptions[i] << endl;}
+\DoxyCodeLine{111         \}}
+\DoxyCodeLine{112         cout << endl;}
+\DoxyCodeLine{113     \}}
+\DoxyCodeLine{114 \};}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* QUESTION\_H */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118 }
+\DoxyCodeLine{119 \textcolor{comment}{//    SAVE FOR SURVEY CLASS}}
+\DoxyCodeLine{120 \textcolor{comment}{//    Question() \{}}
+\DoxyCodeLine{121 \textcolor{comment}{//        cout << "{}Enter Question: "{};}}
+\DoxyCodeLine{122 \textcolor{comment}{//        cin.getline(questInfo-\/>question, QRSIZE);}}
+\DoxyCodeLine{123 \textcolor{comment}{//}}
+\DoxyCodeLine{124 \textcolor{comment}{//        cout << "{}Enter Question Type(1 = Single, 2 = Multiple, 3 = WriteIn): "{};}}
+\DoxyCodeLine{125 \textcolor{comment}{//        cin >> questInfo-\/>typeInt;}}
+\DoxyCodeLine{126 \textcolor{comment}{//}}
+\DoxyCodeLine{127 \textcolor{comment}{//        cout << "{}Enter Number of Response Options: "{};}}
+\DoxyCodeLine{128 \textcolor{comment}{//        cin >> questInfo-\/>numRespOptions;}}
+\DoxyCodeLine{129 \textcolor{comment}{//        cin.ignore();}}
+\DoxyCodeLine{130 \textcolor{comment}{//}}
+\DoxyCodeLine{131 \textcolor{comment}{//        cout << "{}Enter Response Option 1: "{};}}
+\DoxyCodeLine{132 \textcolor{comment}{//        cin.getline(questInfo-\/>respOption1, QRSIZE);}}
+\DoxyCodeLine{133 \textcolor{comment}{//}}
+\DoxyCodeLine{134 \textcolor{comment}{//        cout << "{}Enter Response Option 2: "{};}}
+\DoxyCodeLine{135 \textcolor{comment}{//        cin.getline(questInfo-\/>respOption2, QRSIZE);}}
+\DoxyCodeLine{136 \textcolor{comment}{//}}
+\DoxyCodeLine{137 \textcolor{comment}{//        cout << "{}Enter Response Option 3: "{};}}
+\DoxyCodeLine{138 \textcolor{comment}{//        cin.getline(questInfo-\/>respOption3, QRSIZE);}}
+\DoxyCodeLine{139 \textcolor{comment}{//}}
+\DoxyCodeLine{140 \textcolor{comment}{//        cout << "{}Enter Response Option 4: "{};}}
+\DoxyCodeLine{141 \textcolor{comment}{//        cin.getline(questInfo-\/>respOption4, QRSIZE);}}
+\DoxyCodeLine{142 \textcolor{comment}{//}}
+\DoxyCodeLine{143 \textcolor{comment}{//        cout << "{}Enter Response Option 5: "{};}}
+\DoxyCodeLine{144 \textcolor{comment}{//        cin.getline(questInfo-\/>respOption5, QRSIZE);}}
+\DoxyCodeLine{145 \textcolor{comment}{//    \}}}
+
+\end{DoxyCode}
