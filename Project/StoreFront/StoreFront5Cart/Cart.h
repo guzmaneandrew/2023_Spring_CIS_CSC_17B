@@ -13,6 +13,8 @@
 #ifndef CART_H
 #define CART_H
 
+#include "Item.h"
+
 class Cart {
 private:
     vector<Item *> items;
@@ -30,7 +32,7 @@ public:
     }
 
     int getNumItms() const {
-        return items.size();
+        return numItems;
     }
 
     vector<Item *> getItems() const {
@@ -67,11 +69,18 @@ public:
 
     void display() const {
         int num = 1;
+        float total = 0.0;
 
         for (int i = 0; i < numItems; i++) {
+            cout << fixed << setprecision(2);
+            total += items[i]->getPrice();
             cout << num++ << ") " << endl;
-            items[i]->display();
+            cout << "Item: " << items[i]->getName() << endl;
+            cout << "Price: $" << items[i]->getPrice() << endl;
+            cout << endl;
         }
+
+        cout << "Total: $" << total << endl;
     }
 
     void deleteItem(int i) {
@@ -114,6 +123,30 @@ public:
         }
         storeDB.close();
     }
+
+//    void saveItem2Bin(string file,Item *item) {
+//        fstream storeDB(file, ios::out | ios::binary | ios::app);
+//
+//        if (!storeDB) {
+//            cerr << "Error: Unable to Open File for Writing." << endl;
+//            return;
+//        }
+//
+//        string name;
+//        float price;
+//        int numStck;
+//
+//        name = item->getName();
+//        price = item->getPrice();
+//        numStck = item->getStock();
+//
+//        int len = name.length();
+//        storeDB.write(reinterpret_cast<char *> (&len), sizeof (int));
+//        storeDB.write(name.c_str(), len);
+//        storeDB.write(reinterpret_cast<char *> (&price), sizeof (float));
+//        storeDB.write(reinterpret_cast<char *> (&numStck), sizeof (int));
+//        storeDB.close();
+//    }
 
     void readBin(string file) {
         //Clear items from vector

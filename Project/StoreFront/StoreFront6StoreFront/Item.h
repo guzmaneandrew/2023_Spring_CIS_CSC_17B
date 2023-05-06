@@ -20,46 +20,23 @@ private:
     int numStock;
 public:
 
-    Item() {
-    }
+    Item();
 
-    Item(string name, float price, int stock) {
-        this->name = name;
-        this->price = price;
-        numStock = stock;
-    }
+    Item(string, float, int);
+    
+    void setName(string);
 
-    void setName(string name) {
-        this->name = name;
-    }
+    void setPrice(float);
 
-    void setPrice(float price) {
-        this->price = price;
-    }
+    void setStock(int s);
 
-    void setStock(int s) {
-        numStock = s;
-    }
+    string getName() const;
 
-    string getName() const {
-        return name;
-    }
+    float getPrice() const;
 
-    float getPrice() const {
-        return price;
-    }
-
-    int getStock() const {
-        return numStock;
-    }
-
-    void display() const {
-        cout << right << setw(10) << "Item: " << left << setw(20) << name << endl;
-        cout << right << setw(10) << "Price: " << left << fixed << setprecision(2) 
-                << "$"<< price << "/each" << endl;
-        cout << right << setw(10) << "In Stock: " << left << setw(20) << numStock << endl;
-        cout<<endl;
-    }
+    int getStock() const;
+    
+    void display() const;
 };
 
 #endif /* QUESTION_H */

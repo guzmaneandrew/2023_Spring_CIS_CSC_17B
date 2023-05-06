@@ -29,6 +29,7 @@ using namespace std; //Libraries compiled under std
 #include "Admin.h"
 #include "Cart.h"
 #include "User.h"
+#include "StoreFront.h"
 
 //Global Constants
 //Physics/Chemistry/Math/Conversion Higher Dimension Only

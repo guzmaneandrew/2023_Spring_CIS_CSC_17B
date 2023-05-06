@@ -28,7 +28,7 @@ public:
         this->price = price;
         numStock = stock;
     }
-
+    
     void setName(string name) {
         this->name = name;
     }

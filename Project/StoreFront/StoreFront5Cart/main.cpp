@@ -21,10 +21,13 @@ int main(int argc, char** argv) {
     //Initialize the Random Number Seed
 
     //Declare Variables
-    Admin admin("Andrew","1234");
-//    User user;
-//    user.setUsrInfo("Andrew","1234");
-//    user.prompt();
+    cout << "Welcome to UniQart"<<endl;
+    cout << "Support Local Artists by Purchasing their Artwork"<<endl;
+
+//    Admin admin("Andrew","1234");
+    User user;
+    user.setUsrInfo("aguzman","1234");
+    user.prompt();
     //Initial Variables
 
     //Map the Inputs to the Outputs

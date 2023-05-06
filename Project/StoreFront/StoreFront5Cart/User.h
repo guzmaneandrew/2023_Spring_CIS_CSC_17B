@@ -142,8 +142,6 @@ public:
     void listItmsInCart() {
         int num = 1; //number in list of items
 
-        readCartBin(usrCartFile);
-
         cout << endl << "ALL CART ITEMS" << endl;
         if (cart->getNumItms() == 0) {
             cout << "No Items to Retrieve from the Database." << endl;
@@ -151,31 +149,41 @@ public:
             cart->display();
         }
     }
-    
+
     void addItems() {
         string itmName;
-        int numInStk,numReq;        //num items in stock, num requested
-        Item *itm2Add;
-        bool valid=false;
-        
+        int numInStk, numReq; //num items in stock, num requested
+        Item *itm2Add = nullptr;
+        bool valid = false;
+
         listItmsInStck();
-        
+        readCartBin(usrCartFile);
+        cout<<cart->getNumItms()<<endl;
+        cart->display();
+
         do {
             //Prompt for item to add
-            cout<<"Enter the Item To Add to Your Cart: ";
-            getline(cin,itmName);
-            
+            cout << "Enter the Item To Add to Your Cart: ";
+            getline(cin, itmName);
+
             //Search for item in store items vector
-                for (int i = 0; i < store->getNumItms(); i++) {
-                    if (store->getItem(i)->getName() == itmName) {
-                        itm2Add = store->getItem(i);
-                        valid = true;
-                    }
+            for (int i = 0; i < store->getNumItms(); i++) {
+                if (store->getItem(i)->getName() == itmName) {
+                    valid = true;
+                    //Add item to cart
+                    itm2Add = store->getItem(i);
+                    cart->setItem(itm2Add);
                 }
-        } while(itmName == ""||valid==false);
-        
+            }
+        } while (itmName == "" || valid == false);
+
+
+        //Save new cart item to file
+        //        cart->saveItem2Bin(usrCartFile,itm2Add);
+        //        cart->readBin(usrCartFile);
+        //        cart->display();
     }
-    
+
     void readStoreBin(string file) {
         fstream db(file, ios::in | ios::binary);
 
@@ -282,7 +290,7 @@ public:
         //Clear binary file, output items to binary, then read from binary
         clearBin(file);
         cart->saveBin(file);
-        readStoreBin(file);
+        readCartBin(file);
     }
 };
 

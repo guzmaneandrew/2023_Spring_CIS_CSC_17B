@@ -21,17 +21,17 @@ int main(int argc, char** argv) {
     //Initialize the Random Number Seed
 
     //Declare Variables
-    Admin admin("Andrew","1234");
-//    User user;
-//    user.setUsrInfo("Andrew","1234");
-//    user.prompt();
-    //Initial Variables
+    cout << "Welcome to UniQart"<<endl;
+    cout << "Support Local Artists by Purchasing their Artwork"<<endl<<endl;
 
-    //Map the Inputs to the Outputs
-
-    //Display the Inputs and Outputs
-
-    //Clean Up the Dynamic Stuff
+    cout << "Admin Login" << endl;
+    cout << "username: mlehr \t password: mlehr" << endl;
+    cout << endl;
+    cout << "User Login" << endl;
+    cout << "username: drmark \t password: drmarkpw" << endl;
+    cout << endl;
+    
+    StoreFront artStore;
 
     //Exit 
     return 0;
