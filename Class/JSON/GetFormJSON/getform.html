@@ -1,0 +1,39 @@
+<!-- 
+    Dr. Mark E. Lehr
+    Example for CSC/CIS 17B
+        JSON stringify
+        
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Create the $_GET Object</title>
+        <script type="text/javascript" src="getForm.js"></script>
+    </head>
+
+    <body>
+        <h1>2 Create the $_GET Object</h1>
+        <p>NOTE: Uses getForm.js to create $_GET object</p>
+    <script type="text/javascript">
+        //Get the url that contains input entered into form.html
+        var url=document.location.href;
+        //Parse information in url using getForm() to create $_GET object
+        $_GET=getForm(url);
+        //Write each property to HTML document
+        for(property in $_GET){
+            document.write(property+"="+decodeURIComponent($_GET[property])+"</br>");
+        }
+        //Representation of $_GET object as a string aka stringify
+        var text=JSON.stringify($_GET);
+        //Output string
+        document.write("The Object Stringified = "+text+"</br>");
+        //Create new object from string created from original $_GET object
+        var obj=JSON.parse(text);
+        //Write each property to HTML document
+        for(property in obj){
+            document.write(property+"="+obj[property]+"</br>");
+        }
+    </script>
+    </body>
+</html>
