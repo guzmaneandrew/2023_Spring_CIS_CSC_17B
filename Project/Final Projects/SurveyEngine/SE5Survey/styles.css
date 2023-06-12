@@ -1,0 +1,143 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    color: white;
+}
+
+#motto {
+    text-align: center;
+}
+
+#message {
+    text-align: center;
+    color: red;
+}
+
+body {
+    background-color: #28679E;
+    font-family: Courier, sans-serif;
+}
+
+form {
+    background-color: white;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    align-self: center;
+}
+
+.container {
+    text-align: center;
+    color: black;
+    width: 50%;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+}
+
+#title {
+    text-align: center;
+    font-size: 35px;
+    letter-spacing: 5px;
+}
+
+#survey-form {
+    text-align: left;
+    line-height: 1.5;
+    padding: 1em;
+    border-radius: 0.25rem;
+}
+
+.input {
+    display: block;
+    width: 200px;
+    margin: 10px;
+}
+
+form {
+    color: black;
+    display: flex;
+    margin: 10px;
+    padding: 10px;
+}
+
+button {
+    color: white;
+    background-color: #3589D2;
+    font-size: 1rem;
+    padding: 5px;
+    margin: 10px;
+    width: 75%;
+    border-radius: 4px;
+}
+
+a {
+    color: #3589D2;
+    text-decoration: none;
+}
+
+.btn-container {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.surv-container {
+    width: 75%;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: white;
+    overflow-x: auto;
+}
+
+.buttons {
+    width: 100%;
+    text-decoration: none;
+    background-color: #3589D2;
+    color: white;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 2px 6px 2px 6px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+}
+
+.srv-container table {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    table-layout: fixed;
+}
+
+.surv-container th {
+    width: 25%;
+}
+
+.surv-container th,
+.surv-container td {
+    text-align: center;
+    padding: 13px; 
+    font-weight: 100;
+}
+
+.surv-container tbody tr:nth-child(odd) {
+    background-color: #CCCCCC;
+}
+
+.surv-container tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#responseOptions {
+    margin-top: 20px;
+}
